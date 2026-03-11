@@ -11,14 +11,20 @@ const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
 const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
+// Use "eu" for EU jurisdiction buckets (e.g. hubstream | EU)
+const R2_JURISDICTION = process.env.R2_JURISDICTION;
 
 function getR2Client() {
   if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
     throw new Error("R2 credentials not configured");
   }
+  const subdomain =
+    R2_JURISDICTION === "eu"
+      ? `${R2_ACCOUNT_ID}.eu`
+      : R2_ACCOUNT_ID;
   return new S3Client({
     region: "auto",
-    endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    endpoint: `https://${subdomain}.r2.cloudflarestorage.com`,
     credentials: {
       accessKeyId: R2_ACCESS_KEY_ID,
       secretAccessKey: R2_SECRET_ACCESS_KEY,

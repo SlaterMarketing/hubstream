@@ -47,10 +47,10 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
         {event.coverImageUrl && (
           <>
             <div
-              className="absolute inset-0 bg-cover bg-center"
+              className="absolute inset-0 z-0 bg-cover bg-center"
               style={{ backgroundImage: `url(${event.coverImageUrl})` }}
             />
-            <div className="absolute inset-0 bg-black/50" />
+            <div className="absolute inset-0 z-0 bg-black/50" />
           </>
         )}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
