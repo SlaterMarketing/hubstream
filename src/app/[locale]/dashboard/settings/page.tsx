@@ -86,7 +86,12 @@ export default async function SettingsPage({ params, searchParams }: Props) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <OrgSettingsForm name={org.name} slug={org.slug} />
+          <OrgSettingsForm
+            name={org.name}
+            slug={org.slug}
+            logoUrl={org.logoUrl}
+            ctaColor={org.ctaColor}
+          />
         </CardContent>
       </Card>
 

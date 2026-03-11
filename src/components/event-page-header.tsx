@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand-logo";
 import { useEventEditorActions } from "@/components/dashboard-header";
+import { getContrastColor } from "@/lib/utils";
 
 type Props = {
   showRegistration: boolean;
@@ -14,9 +15,13 @@ type Props = {
   editorMode?: boolean;
   /** When set (e.g. editing published event), show "Back to event" with this href instead of "Back to dashboard" */
   backHref?: string;
+  /** Org logo to show instead of HubStream logo on event pages */
+  logoUrl?: string | null;
+  /** CTA button colour (hex) for Register and other buttons */
+  ctaColor?: string | null;
 };
 
-export function EventPageHeader({ showRegistration, hasCoverImage, editorMode, backHref }: Props) {
+export function EventPageHeader({ showRegistration, hasCoverImage, editorMode, backHref, logoUrl, ctaColor }: Props) {
   const t = useTranslations("EventPage");
   const ctx = useEventEditorActions();
 
@@ -39,6 +44,9 @@ export function EventPageHeader({ showRegistration, hasCoverImage, editorMode, b
   const textClass = hasCoverImage ? "text-white" : "text-foreground";
   const canPublish = ctx?.canPublish ?? false;
   const isPublishing = ctx?.isPublishing ?? false;
+  const ctaStyle = ctaColor
+    ? { backgroundColor: ctaColor, color: getContrastColor(ctaColor) }
+    : undefined;
 
   return (
     <header className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between px-4 py-4 sm:px-6">
@@ -51,7 +59,7 @@ export function EventPageHeader({ showRegistration, hasCoverImage, editorMode, b
         </Link>
       ) : (
         <Link href="/" className={`flex items-center ${textClass} hover:opacity-90`}>
-          <BrandLogo showImage size="md" inverted={hasCoverImage} />
+          <BrandLogo showImage size="md" inverted={hasCoverImage} customLogoUrl={logoUrl} />
         </Link>
       )}
       {editorMode ? (
@@ -61,8 +69,9 @@ export function EventPageHeader({ showRegistration, hasCoverImage, editorMode, b
             className={`inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors ${
               hasCoverImage
                 ? "bg-white/90 text-foreground hover:bg-white"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
+                : ctaStyle ? "" : "bg-primary text-primary-foreground hover:bg-primary/90"
             }`}
+            style={!hasCoverImage ? ctaStyle : undefined}
           >
             Done
           </Link>
@@ -72,6 +81,7 @@ export function EventPageHeader({ showRegistration, hasCoverImage, editorMode, b
             disabled={!canPublish || isPublishing}
             variant={hasCoverImage ? "secondary" : "default"}
             className={hasCoverImage ? "bg-white/90 text-foreground hover:bg-white" : ""}
+            style={!hasCoverImage ? ctaStyle : undefined}
           >
             {isPublishing ? "Publishing..." : "Publish event"}
           </Button>
@@ -82,6 +92,7 @@ export function EventPageHeader({ showRegistration, hasCoverImage, editorMode, b
             onClick={scrollToRegister}
             variant={hasCoverImage ? "secondary" : "default"}
             className={hasCoverImage ? "bg-white/90 text-foreground hover:bg-white" : ""}
+            style={!hasCoverImage ? ctaStyle : undefined}
           >
             {t("registerForEvent")}
           </Button>

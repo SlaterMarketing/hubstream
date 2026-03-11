@@ -8,11 +8,13 @@ import { cn } from "@/lib/utils";
 type Props = {
   value: string;
   onChange: (url: string) => void;
-  type?: "cover" | "event" | "speaker";
+  type?: "cover" | "event" | "speaker" | "logo";
   className?: string;
+  /** For logos, use "contain" to preserve aspect ratio */
+  objectFit?: "cover" | "contain";
 };
 
-export function ImageUpload({ value, onChange, type = "event", className }: Props) {
+export function ImageUpload({ value, onChange, type = "event", className, objectFit = "cover" }: Props) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -57,7 +59,7 @@ export function ImageUpload({ value, onChange, type = "event", className }: Prop
             <img
               src={value}
               alt="Upload"
-              className="h-full w-full rounded-lg object-cover"
+              className={cn("h-full w-full rounded-lg", objectFit === "contain" ? "object-contain" : "object-cover")}
             />
             <Button
               type="button"

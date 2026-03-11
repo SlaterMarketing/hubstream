@@ -41,7 +41,7 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
 
   const org = await db.organization.findUnique({
     where: { slug: orgSlug },
-    select: { id: true, name: true, logoUrl: true, plan: true },
+    select: { id: true, name: true, logoUrl: true, ctaColor: true, plan: true },
   });
   if (!org) notFound();
 
@@ -124,6 +124,8 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
           <EventPageHeader
             showRegistration={showRegistration}
             hasCoverImage={!!event.coverImageUrl}
+            logoUrl={org.logoUrl}
+            ctaColor={org.ctaColor}
           />
           <div
             className={`flex flex-col items-center justify-center text-center ${
@@ -276,6 +278,7 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
                     utmMedium={search.utm_medium}
                     utmCampaign={search.utm_campaign}
                     showPoweredBy={org.plan !== "pro"}
+                    ctaColor={org.ctaColor}
                   />
                 </div>
               )}

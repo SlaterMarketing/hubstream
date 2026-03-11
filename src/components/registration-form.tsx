@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand-logo";
 import { Input } from "@/components/ui/input";
 import { registerForEvent } from "@/app/actions/registrations";
+import { getContrastColor } from "@/lib/utils";
 
 type RegistrationField = {
   key: string;
@@ -29,6 +30,7 @@ type Props = {
   utmMedium?: string;
   utmCampaign?: string;
   showPoweredBy?: boolean;
+  ctaColor?: string | null;
 };
 
 export function RegistrationForm({
@@ -39,6 +41,7 @@ export function RegistrationForm({
   utmMedium,
   utmCampaign,
   showPoweredBy = false,
+  ctaColor,
 }: Props) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -168,7 +171,12 @@ export function RegistrationForm({
           </label>
         </div>
         {error && <p className="text-sm text-destructive">{error}</p>}
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={loading}
+          style={ctaColor ? { backgroundColor: ctaColor, color: getContrastColor(ctaColor) } : undefined}
+        >
           {loading ? "Registering..." : "Register"}
         </Button>
       </form>

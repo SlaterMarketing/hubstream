@@ -56,6 +56,7 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
               utmMedium={search.utm_medium}
               utmCampaign={search.utm_campaign}
               showPoweredBy={showPoweredBy}
+              ctaColor={event.organization.ctaColor}
             />
           )}
         </CardContent>

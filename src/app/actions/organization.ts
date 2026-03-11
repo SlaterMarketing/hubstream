@@ -11,9 +11,13 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
+const HEX_COLOR_REGEX = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
 export async function updateOrganization(data: {
   name?: string;
   slug?: string;
+  logoUrl?: string | null;
+  ctaColor?: string | null;
 }) {
   const session = await auth();
   const user = session?.user as { orgId?: string | null };
@@ -24,7 +28,7 @@ export async function updateOrganization(data: {
   });
   if (!org) return { error: "Organization not found" };
 
-  const updates: Record<string, string> = {};
+  const updates: Record<string, string | null> = {};
   if (data.name?.trim()) updates.name = data.name.trim();
   if (data.slug?.trim()) {
     const slug = slugify(data.slug.trim());
@@ -36,6 +40,14 @@ export async function updateOrganization(data: {
       return { error: "This slug is already taken" };
     }
     updates.slug = slug;
+  }
+  if (data.logoUrl !== undefined) updates.logoUrl = data.logoUrl?.trim() || null;
+  if (data.ctaColor !== undefined) {
+    const color = data.ctaColor?.trim() || null;
+    if (color && !HEX_COLOR_REGEX.test(color)) {
+      return { error: "CTA colour must be a valid hex colour (e.g. #ff724c)" };
+    }
+    updates.ctaColor = color;
   }
 
   if (Object.keys(updates).length === 0) return { success: true };
