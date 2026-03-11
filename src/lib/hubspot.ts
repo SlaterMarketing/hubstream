@@ -68,6 +68,13 @@ export async function getValidHubSpotAccessToken(
   return refreshed?.accessToken ?? null;
 }
 
+const DEFAULT_FIELD_MAPPING: Record<string, string> = {
+  firstName: "firstname",
+  lastName: "lastname",
+  company: "company",
+  jobTitle: "jobtitle",
+};
+
 /** Convert field key to HubSpot property internal name (lowercase, underscores) */
 function toHubSpotPropertyName(key: string): string {
   return key
@@ -76,6 +83,14 @@ function toHubSpotPropertyName(key: string): string {
     .replace(/^_/, "")
     .replace(/\s+/g, "_")
     .replace(/[^a-z0-9_]/g, "");
+}
+
+function getHubSpotPropertyName(
+  formKey: string,
+  customMapping?: Record<string, string> | null
+): string {
+  const mapping = { ...DEFAULT_FIELD_MAPPING, ...customMapping };
+  return mapping[formKey] ?? toHubSpotPropertyName(formKey);
 }
 
 export async function createOrUpdateHubSpotContact(
@@ -87,7 +102,8 @@ export async function createOrUpdateHubSpotContact(
     company?: string;
     jobTitle?: string;
     customProperties?: Record<string, string | boolean>;
-  }
+  },
+  fieldMapping?: Record<string, string> | null
 ): Promise<string | null> {
   const searchRes = await fetch(
     `${HUBSPOT_API}/crm/v3/objects/contacts/search`,
@@ -119,16 +135,27 @@ export async function createOrUpdateHubSpotContact(
   const properties: Record<string, string> = {
     email: data.email,
   };
-  if (data.firstName) properties.firstname = data.firstName;
-  if (data.lastName) properties.lastname = data.lastName;
-  if (data.company) properties.company = data.company;
-  if (data.jobTitle) properties.jobtitle = data.jobTitle;
 
-  // Sync custom fields to HubSpot (property must exist in HubSpot)
+  // Standard fields using mapping
+  const standardData = {
+    firstName: data.firstName,
+    lastName: data.lastName,
+    company: data.company,
+    jobTitle: data.jobTitle,
+  };
+  for (const [key, value] of Object.entries(standardData)) {
+    if (value) {
+      properties[getHubSpotPropertyName(key, fieldMapping)] = value;
+    }
+  }
+
+  // Custom fields using mapping (or auto-convert as fallback)
   for (const [key, value] of Object.entries(data.customProperties ?? {})) {
-    const propName = toHubSpotPropertyName(key);
-    if (propName && value !== undefined && value !== null && value !== "") {
-      properties[propName] = typeof value === "boolean" ? String(value) : String(value);
+    if (value !== undefined && value !== null && value !== "") {
+      const propName = getHubSpotPropertyName(key, fieldMapping);
+      if (propName) {
+        properties[propName] = typeof value === "boolean" ? String(value) : String(value);
+      }
     }
   }
 

@@ -3,6 +3,7 @@ import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { HubSpotConnect } from "./hubspot-connect";
+import { HubSpotFieldMapping } from "./hubspot-field-mapping";
 import { GoogleCalendarConnect } from "./google-calendar-connect";
 import { OrgSettingsForm } from "./org-settings-form";
 import { BillingSection } from "./billing-section";
@@ -123,6 +124,19 @@ export default async function SettingsPage({ params, searchParams }: Props) {
             </p>
           )}
           <HubSpotConnect connected={hubspotConnected} locale={locale} />
+          {hubspotConnected && (
+            <div className="space-y-4 border-t pt-4">
+              <p className="text-sm font-medium">HubSpot field mapping</p>
+              <HubSpotFieldMapping
+                initialMapping={
+                  integrationSettings?.hubspotFieldMapping as Record<
+                    string,
+                    string
+                  > | null
+                }
+              />
+            </div>
+          )}
           <div className="border-t pt-4">
             <p className="mb-2 text-sm font-medium">Google Calendar</p>
             <GoogleCalendarConnect

@@ -103,16 +103,26 @@ export async function registerForEvent(
 
   const orgId = event.organization.id;
   const accessToken = await getValidHubSpotAccessToken(orgId);
+  const integrationSettings = accessToken
+    ? await db.integrationSettings.findUnique({
+        where: { orgId },
+        select: { hubspotFieldMapping: true },
+      })
+    : null;
   if (accessToken) {
     try {
-      const contactId = await createOrUpdateHubSpotContact(accessToken, {
+      const contactId = await createOrUpdateHubSpotContact(
+        accessToken,
+        {
         email,
         firstName: data.firstName?.trim() || undefined,
         lastName: data.lastName?.trim() || undefined,
         company: data.company?.trim() || undefined,
         jobTitle: data.jobTitle?.trim() || undefined,
         customProperties: Object.keys(customOnly).length ? customOnly : undefined,
-      });
+      },
+      (integrationSettings?.hubspotFieldMapping as Record<string, string> | null) ?? undefined
+      );
       if (contactId) {
         await db.registration.update({
           where: { id: registration.id },
