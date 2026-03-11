@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand-logo";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { MenuIcon, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Session } from "next-auth";
@@ -33,7 +34,7 @@ export function Navbar({ session }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center">
           <BrandLogo />
@@ -53,13 +54,8 @@ export function Navbar({ session }: Props) {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <LanguageSwitcher />
-          <Link
-            href="/privacy"
-            className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline"
-          >
-            {t("Homepage.nav.privacy")}
-          </Link>
           {session?.user ? (
             <Link href="/dashboard">
               <Button>{t("Homepage.nav.dashboard")}</Button>
@@ -82,7 +78,7 @@ export function Navbar({ session }: Props) {
 
       <div
         className={cn(
-          "md:hidden border-t bg-background/95 backdrop-blur",
+          "md:hidden",
           mobileOpen ? "block" : "hidden"
         )}
       >
@@ -100,13 +96,6 @@ export function Navbar({ session }: Props) {
               {t(link.labelKey)}
             </a>
           ))}
-          <Link
-            href="/privacy"
-            className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground sm:hidden"
-            onClick={() => setMobileOpen(false)}
-          >
-            {t("Homepage.nav.privacy")}
-          </Link>
         </nav>
       </div>
     </header>

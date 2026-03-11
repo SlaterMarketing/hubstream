@@ -4,18 +4,28 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 const LOGOS = [
-  "Google",
-  "HubSpot",
-  "Stripe",
-  "Vercel",
-  "Notion",
-  "Figma",
+  "Vuabl",
+  "MailConnector",
+  "Dinabite",
+  "Advend",
+  "Kintana",
+  "Padwords",
+  "CSVFixerAI",
+  "Outvoice",
 ] as const;
+
+function LogoItem({ name }: { name: string }) {
+  return (
+    <div className="shrink-0 text-lg font-semibold text-muted-foreground/60">
+      {name}
+    </div>
+  );
+}
 
 export function SocialProof() {
   const t = useTranslations();
   return (
-    <section className="border-y bg-muted/30 py-8">
+    <section className="bg-muted/30 py-8">
       <div className="mx-auto max-w-6xl px-4">
         <motion.p
           className="mb-6 text-center text-sm font-medium text-muted-foreground"
@@ -26,22 +36,13 @@ export function SocialProof() {
         >
           {t("Homepage.socialProof.trustedBy")}
         </motion.p>
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-8 sm:gap-12"
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          {LOGOS.map((name) => (
-            <div
-              key={name}
-              className="text-lg font-semibold text-muted-foreground/60 grayscale transition-colors hover:text-muted-foreground hover:grayscale-0"
-            >
-              {name}
-            </div>
-          ))}
-        </motion.div>
+        <div className="overflow-hidden">
+          <div className="flex w-max animate-scroll-right gap-12 sm:gap-16">
+            {[...LOGOS, ...LOGOS].map((name, i) => (
+              <LogoItem key={`${name}-${i}`} name={name} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

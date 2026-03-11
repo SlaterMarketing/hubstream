@@ -10,7 +10,7 @@ export function FinalCta() {
   return (
     <section className="px-4 py-24">
       <motion.div
-        className="mx-auto max-w-4xl rounded-2xl bg-gradient-to-br from-brand to-orange-500 px-8 py-16 text-center text-white shadow-xl sm:px-16 sm:py-20"
+        className="mx-auto w-[80%] rounded-2xl bg-gradient-to-br from-brand to-orange-500 px-8 py-16 text-center text-white shadow-xl sm:px-16 sm:py-20"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

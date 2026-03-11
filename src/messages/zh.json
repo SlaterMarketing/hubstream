@@ -6,7 +6,11 @@
     "cancel": "取消",
     "delete": "删除",
     "edit": "编辑",
-    "back": "返回"
+    "back": "返回",
+    "toggleTheme": "切换主题",
+    "themeLight": "浅色",
+    "themeDark": "深色",
+    "themeSystem": "系统"
   },
   "Auth": {
     "signIn": "登录",
@@ -30,7 +34,7 @@
   },
   "Homepage": {
     "nav": { "features": "功能", "pricing": "定价", "faq": "常见问题", "privacy": "隐私", "dashboard": "仪表板" },
-    "hero": { "headlineBefore": "面向", "headlineHighlight": "Google Meet 和 HubSpot", "headlineAfter": "的轻量网络研讨会管理", "subheadline": "创建活动、嵌入报名表单，并与您的 CRM 同步。无需复杂设置。", "ctaPrimary": "免费开始", "ctaSecondary": "了解如何运作", "ctaDashboard": "进入仪表板", "trustLine": "无需信用卡。入门计划永久免费。" },
+    "hero": { "headlineBefore": "面向团队的网络研讨会", "headlineGoogleMeet": "Google Meet", "headlineAnd": "和", "headlineHubspot": "Hubspot", "subheadline": "创建活动、嵌入报名表单，并与您的 CRM 同步。无需复杂设置。", "ctaPrimary": "免费开始", "ctaSecondary": "了解如何运作", "ctaDashboard": "进入仪表板", "trustLine": "无需信用卡。入门计划永久免费。" },
     "socialProof": { "trustedBy": "受到以下团队的信赖" },
     "howItWorks": { "title": "如何运作", "subtitle": "三个简单步骤举办您的首次网络研讨会。", "create": { "title": "创建", "description": "使用富文本编辑器设置您的网络研讨会。" }, "embed": { "title": "嵌入", "description": "用一行代码将报名表单添加到您的网站。" }, "engage": { "title": "参与", "description": "参会者自动同步到 HubSpot。" } },
     "features": { "title": "功能", "subtitle": "举办专业网络研讨会所需的一切。", "proBadge": "Pro", "googleMeet": { "title": "Google Meet 集成", "description": "发布时自动生成 Meet 链接。" }, "hubspotSync": { "title": "HubSpot CRM 同步", "description": "联系人和会议自动同步到您的 CRM。" }, "embed": { "title": "可嵌入表单", "description": "一行代码嵌入任何网站。" }, "customFields": { "title": "自定义字段", "description": "收集您需要的数据。" }, "customDomain": { "title": "自定义域名", "description": "为活动页面使用您的品牌域名。" }, "team": { "title": "团队协作", "description": "无限团队成员。" } },
@@ -39,7 +43,7 @@
     "caseStudy": { "title": "受到成长型团队的信赖" },
     "stats": { "webinars": "场网络研讨会", "registrations": "次报名处理", "setupTime": "节省的配置时间" },
     "testimonials": { "title": "客户评价", "subtitle": "团队使用 HubStream 轻松举办网络研讨会。", "1": { "quote": "HubStream 将我们的配置时间从数小时缩短到数分钟。", "author": "Sarah Chen", "title": "营销总监", "company": "TechFlow", "metric": "配置速度提升 80%" }, "2": { "quote": "终于有一个简单好用的工具了。", "author": "Marcus Johnson", "title": "需求生成负责人", "company": "ScaleUp", "metric": "网络研讨会增加 3 倍" }, "3": { "quote": "我们改用 HubStream。成本减半，零学习曲线。", "author": "Elena Rodriguez", "title": "活动经理", "company": "GrowthLabs", "metric": "节省 50% 成本" } },
-    "pricing": { "title": "定价", "subtitle": "免费开始。需要时再升级。", "monthly": "月付", "yearly": "年付", "saveBadge": "省 17%", "mostPopular": "最受欢迎", "billedYearly": "按年计费", "allPlansTitle": "所有计划包含", "allPlans": { "1": "邮件通知", "2": "GDPR 合规", "3": "分析仪表板" }, "free": { "name": "免费", "description": "试用", "cta": "开始", "poweredBy": "由", "onEmbeds": "提供（嵌入时）", "features": { "1": "同时 1 个已发布网络研讨会", "2": "每场最多 50 位参会者", "3": "1 位团队成员", "4": "placeholder" } }, "pro": { "name": "Pro", "description": "适合成长型团队", "cta": "免费试用", "features": { "1": "无限已发布网络研讨会", "2": "每场最多 100 位参会者", "3": "无限团队成员", "4": "嵌入时无品牌标识", "5": "自定义域名", "6": "自定义报名字段" } } },
+    "pricing": { "title": "定价", "subtitle": "免费开始。需要时再升级。", "monthly": "月付", "yearly": "年付", "saveBadge": "省 17%", "mostPopular": "最受欢迎", "billedYearly": "按年计费", "allPlansTitle": "所有计划包含", "allPlans": { "1": "邮件通知", "2": "GDPR 合规", "3": "分析仪表板" }, "free": { "name": "免费", "description": "试用", "cta": "开始", "features": { "1": "同时 1 个已发布网络研讨会", "2": "每场最多 50 位参会者", "3": "1 位团队成员", "4": "嵌入时由 HubStream 提供", "5": "基础分析", "6": "邮件支持" } }, "pro": { "name": "Pro", "description": "适合成长型团队", "cta": "免费试用", "features": { "1": "无限已发布网络研讨会", "2": "每场最多 100 位参会者", "3": "无限团队成员", "4": "嵌入时无品牌标识", "5": "自定义域名", "6": "自定义报名字段" } } },
     "faq": { "title": "常见问题", "subtitle": "关于 HubStream 的一切。", "whatIs": { "question": "什么是 HubStream？", "answer": "HubStream 是连接 Google Meet 和 HubSpot 的轻量网络研讨会管理工具。" }, "googleMeet": { "question": "Google Meet 集成如何运作？", "answer": "发布时 HubStream 自动创建 Meet 链接。" }, "hubspotSync": { "question": "HubSpot 同步如何运作？", "answer": "有人报名时，HubStream 在 HubSpot 中创建或更新联系人。" }, "embed": { "question": "可以将表单嵌入任何网站吗？", "answer": "可以。HubStream 提供单行 iframe 代码。" }, "freeLimits": { "question": "达到免费计划限制会怎样？", "answer": "您需要升级到 Pro。" }, "upgrade": { "question": "如何升级到 Pro？", "answer": "在仪表板设置中点击升级到 Pro。" }, "freeTrial": { "question": "有免费试用吗？", "answer": "免费计划永久免费。" }, "customDomain": { "question": "支持自定义域名吗？", "answer": "支持，在 Pro 计划中。" } },
     "finalCta": { "title": "准备好简化您的网络研讨会了吗？", "subtitle": "提供免费计划。无需信用卡。", "cta": "免费开始" },
     "footer": { "tagline": "面向 Google Meet 和 HubSpot 的轻量网络研讨会管理。", "product": "产品", "resources": "资源", "privacy": "隐私政策" }

@@ -7,10 +7,9 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CheckIcon } from "lucide-react";
 import { PRICING_PLANS, ALL_PLANS_INCLUDE } from "@/data/homepage";
-import { BrandLogo } from "@/components/brand-logo";
 import { cn } from "@/lib/utils";
 import type { Session } from "next-auth";
 
@@ -55,14 +54,15 @@ export function Pricing({ session }: Props) {
           </Tabs>
         </motion.div>
 
-        <div className="mt-16 grid gap-8 sm:grid-cols-2">
+        <div className="mt-16 grid gap-8 sm:grid-cols-2 sm:items-stretch">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
+            className="flex"
           >
-            <Card className={cn("h-full", !PRICING_PLANS.free.popular && "border-muted")}>
+            <Card className={cn("flex h-full w-full flex-col", !PRICING_PLANS.free.popular && "border-muted")}>
               <CardHeader>
                 <CardTitle>{t(PRICING_PLANS.free.nameKey)}</CardTitle>
                 <CardDescription>{t(PRICING_PLANS.free.descriptionKey)}</CardDescription>
@@ -71,24 +71,17 @@ export function Pricing({ session }: Props) {
                   <span className="text-base font-normal text-muted-foreground">/mo</span>
                 </p>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="flex flex-1 flex-col space-y-6">
                 <ul className="space-y-2 text-sm">
                   {PRICING_PLANS.free.features.map((key) => (
                     <li key={key} className="flex items-center gap-2">
                       <CheckIcon className="size-4 shrink-0 text-brand" />
-                      {key === "Homepage.pricing.free.features.4" ? (
-                        <span>
-                          {t("Homepage.pricing.free.poweredBy")}{" "}
-                          <BrandLogo showImage={false} size="sm" /> {t("Homepage.pricing.free.onEmbeds")}
-                        </span>
-                      ) : (
-                        t(key)
-                      )}
+                      {t(key)}
                     </li>
                   ))}
                 </ul>
                 {!session?.user && (
-                  <Link href="/login">
+                  <Link href="/login" className="mt-auto">
                     <Button variant="outline" className="w-full">
                       {t("Homepage.pricing.free.cta")}
                     </Button>
@@ -103,8 +96,9 @@ export function Pricing({ session }: Props) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex"
           >
-            <Card className={cn("h-full", PRICING_PLANS.pro.popular && "border-brand bg-brand/5")}>
+            <Card className={cn("flex h-full w-full flex-col", PRICING_PLANS.pro.popular && "border-brand bg-brand/5")}>
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <CardTitle>{t(PRICING_PLANS.pro.nameKey)}</CardTitle>
@@ -115,15 +109,12 @@ export function Pricing({ session }: Props) {
                 <CardDescription>{t(PRICING_PLANS.pro.descriptionKey)}</CardDescription>
                 <p className="text-3xl font-bold">
                   ${billing === "monthly" ? PRICING_PLANS.pro.priceMonthly : Math.floor(PRICING_PLANS.pro.priceYearly / 12)}
-                  <span className="text-base font-normal text-muted-foreground">/mo</span>
+                  <span className="text-base font-normal text-muted-foreground">
+                    /mo{billing === "yearly" && ` ($${PRICING_PLANS.pro.priceYearly}/yr)`}
+                  </span>
                 </p>
-                {billing === "yearly" && (
-                  <p className="text-sm text-muted-foreground">
-                    {t("Homepage.pricing.billedYearly")} ${PRICING_PLANS.pro.priceYearly}
-                  </p>
-                )}
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="flex flex-1 flex-col space-y-6">
                 <ul className="space-y-2 text-sm">
                   {PRICING_PLANS.pro.features.map((key) => (
                     <li key={key} className="flex items-center gap-2">
@@ -133,7 +124,7 @@ export function Pricing({ session }: Props) {
                   ))}
                 </ul>
                 {!session?.user && (
-                  <Link href="/login">
+                  <Link href="/login" className="mt-auto">
                     <Button className="w-full">{t("Homepage.pricing.pro.cta")}</Button>
                   </Link>
                 )}
@@ -143,19 +134,25 @@ export function Pricing({ session }: Props) {
         </div>
 
         <motion.div
-          className="mt-12 rounded-lg border bg-muted/30 p-6"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="mt-12 overflow-hidden rounded-xl border border-border/60 bg-gradient-to-br from-muted/50 to-muted/30 px-6 py-8 shadow-sm"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
         >
-          <p className="mb-4 text-center text-sm font-medium">
+          <p className="mb-6 text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">
             {t("Homepage.pricing.allPlansTitle")}
           </p>
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-4 sm:gap-x-14">
             {ALL_PLANS_INCLUDE.map((key) => (
-              <div key={key} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckIcon className="size-4 shrink-0 text-brand" />
-                {t(key)}
+              <div
+                key={key}
+                className="flex items-center gap-3 rounded-lg bg-background/60 px-4 py-2.5 shadow-sm ring-1 ring-border/40"
+              >
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-brand/15">
+                  <CheckIcon className="size-3.5 text-brand" />
+                </span>
+                <span className="text-sm font-medium text-foreground">{t(key)}</span>
               </div>
             ))}
           </div>

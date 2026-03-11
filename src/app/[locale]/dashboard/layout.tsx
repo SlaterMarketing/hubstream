@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type Props = {
   children: React.ReactNode;
@@ -39,6 +40,7 @@ export default async function DashboardLayout({ children, params }: Props) {
             <BrandLogo />
           </Link>
           <nav className="flex items-center gap-4">
+            <ThemeToggle />
             <LanguageSwitcher />
             <Link href="/dashboard/events/new">
               <Button size="sm">New event</Button>

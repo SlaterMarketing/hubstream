@@ -6,7 +6,11 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "back": "Back"
+    "back": "Back",
+    "toggleTheme": "Toggle theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System"
   },
   "Auth": {
     "signIn": "Sign in",
@@ -37,9 +41,10 @@
       "dashboard": "Dashboard"
     },
     "hero": {
-      "headlineBefore": "Lightweight webinar management for",
-      "headlineHighlight": "Google Meet and HubSpot",
-      "headlineAfter": "",
+      "headlineBefore": "Webinars for Teams using",
+      "headlineGoogleMeet": "Google Meet",
+      "headlineAnd": "and",
+      "headlineHubspot": "Hubspot",
       "subheadline": "Create events, embed signup forms, and sync everything to your CRM. No complex setup.",
       "ctaPrimary": "Get started free",
       "ctaSecondary": "See how it works",
@@ -171,13 +176,13 @@
         "name": "Free",
         "description": "For trying out",
         "cta": "Get started",
-        "poweredBy": "Powered by",
-        "onEmbeds": "on embeds",
         "features": {
           "1": "1 published webinar at a time",
           "2": "Up to 50 attendees per webinar",
           "3": "1 team member",
-          "4": "placeholder"
+          "4": "Powered by HubStream on embeds",
+          "5": "Basic analytics",
+          "6": "Email support"
         }
       },
       "pro": {

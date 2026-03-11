@@ -173,6 +173,8 @@ export const PRICING_PLANS = {
       "Homepage.pricing.free.features.2",
       "Homepage.pricing.free.features.3",
       "Homepage.pricing.free.features.4",
+      "Homepage.pricing.free.features.5",
+      "Homepage.pricing.free.features.6",
     ] as const,
   },
   pro: {
