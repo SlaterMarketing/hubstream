@@ -5,6 +5,7 @@ import { ReminderEmail } from "@/emails/reminder";
 import { CancellationEmail } from "@/emails/cancellation";
 import { RescheduleEmail } from "@/emails/reschedule";
 import { RecordingAvailableEmail } from "@/emails/recording-available";
+import { InviteEmail } from "@/emails/invite";
 import { generateIcs } from "./ics";
 
 function getResend() {
@@ -176,6 +177,28 @@ export async function sendRecordingAvailableEmail(data: {
   return sendEmail({
     to: data.to,
     subject: `Recording available: ${data.eventTitle}`,
+    html,
+  });
+}
+
+export async function sendInviteEmail(data: {
+  to: string;
+  orgName: string;
+  inviterName?: string;
+  inviteUrl: string;
+  expiresInDays: number;
+}) {
+  const html = await render(
+    InviteEmail({
+      orgName: data.orgName,
+      inviterName: data.inviterName,
+      inviteUrl: data.inviteUrl,
+      expiresInDays: data.expiresInDays,
+    })
+  );
+  return sendEmail({
+    to: data.to,
+    subject: `You're invited to join ${data.orgName} on HubStream`,
     html,
   });
 }

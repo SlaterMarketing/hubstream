@@ -20,11 +20,28 @@ model Organization {
   createdAt    DateTime @default(now())
 
   users              User[]
+  invites            Invite[]
   events             Event[]
   customFields       CustomField[]
   speakers           Speaker[]
   integrationSettings IntegrationSettings?
   subscription       Subscription?
+}
+
+model Invite {
+  id        String   @id @default(cuid())
+  orgId     String
+  email     String
+  role      String   @default("member") // "admin" | "member"
+  token     String   @unique
+  invitedById String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  invitedBy    User          @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, email])
 }
 
 model Speaker {
@@ -65,9 +82,10 @@ model User {
   role          String    @default("member") // "owner" | "admin" | "member"
   createdAt     DateTime  @default(now())
 
-  organization Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  accounts     Account[]
-  sessions     Session[]
+  organization   Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  accounts       Account[]
+  sessions       Session[]
+  invitesSent    Invite[]      @relation("InvitedBy")
 
   @@unique([email])
 }

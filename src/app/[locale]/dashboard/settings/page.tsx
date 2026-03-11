@@ -7,6 +7,7 @@ import { HubSpotFieldMapping } from "./hubspot-field-mapping";
 import { GoogleCalendarConnect } from "./google-calendar-connect";
 import { OrgSettingsForm } from "./org-settings-form";
 import { BillingSection } from "./billing-section";
+import { TeamSection } from "./team-section";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -24,6 +25,15 @@ export default async function SettingsPage({ params, searchParams }: Props) {
 
   const org = await db.organization.findUnique({
     where: { id: user.orgId },
+    include: {
+      users: {
+        select: { id: true, email: true, name: true, role: true, image: true },
+      },
+      invites: {
+        where: { expiresAt: { gt: new Date() } },
+        select: { id: true, email: true, role: true, expiresAt: true },
+      },
+    },
   });
   const subscription = await db.subscription.findUnique({
     where: { orgId: user.orgId },
@@ -80,7 +90,7 @@ export default async function SettingsPage({ params, searchParams }: Props) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card id="billing">
         <CardHeader>
           <CardTitle>Billing</CardTitle>
           <CardDescription>
@@ -104,6 +114,17 @@ export default async function SettingsPage({ params, searchParams }: Props) {
           />
         </CardContent>
       </Card>
+
+      <TeamSection
+        plan={org.plan}
+        members={org.users}
+        invites={org.invites.map((i) => ({
+        ...i,
+        expiresAt: i.expiresAt.toISOString(),
+      }))}
+        currentUserId={(session?.user as { id?: string })?.id ?? ""}
+        currentUserRole={(session?.user as { role?: string })?.role ?? "member"}
+      />
 
       <Card>
         <CardHeader>

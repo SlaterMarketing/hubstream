@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ reconnect?: string }>;
+  searchParams: Promise<{ reconnect?: string; callbackUrl?: string }>;
 };
 
 export default async function LoginPage({ params, searchParams }: Props) {
@@ -17,14 +17,20 @@ export default async function LoginPage({ params, searchParams }: Props) {
   const t = await getTranslations("Auth");
   const session = await auth();
   const isReconnecting = search.reconnect === "calendar";
+  const callbackUrl = search.callbackUrl;
 
   if (session?.user) {
     const user = session.user as { orgId?: string | null };
+    if (callbackUrl) {
+      redirect(callbackUrl);
+    }
     if (user.orgId) {
       redirect(isReconnecting ? "/dashboard/settings" : "/dashboard");
     }
     redirect("/onboarding");
   }
+
+  const redirectTo = callbackUrl ?? (isReconnecting ? "/dashboard/settings" : "/onboarding");
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -34,7 +40,9 @@ export default async function LoginPage({ params, searchParams }: Props) {
           <CardDescription>
             {isReconnecting
               ? "Sign in with Google again to reconnect Calendar access for publishing events."
-              : "Sign in with your Google account to get started"}
+              : callbackUrl
+                ? "Sign in with the email the invite was sent to."
+                : "Sign in with your Google account to get started"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -42,7 +50,7 @@ export default async function LoginPage({ params, searchParams }: Props) {
             action={async () => {
               "use server";
               await signIn("google", {
-                redirectTo: isReconnecting ? "/dashboard/settings" : "/onboarding",
+                redirectTo,
               });
             }}
           >
