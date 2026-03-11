@@ -20,10 +20,12 @@ import { ExportCsvButton } from "./export-csv-button";
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ edit?: string }>;
 };
 
-export default async function EventDetailPage({ params }: Props) {
+export default async function EventDetailPage({ params, searchParams }: Props) {
   const { locale, id } = await params;
+  const { edit } = await searchParams;
   setRequestLocale(locale);
   const session = await auth();
   const user = session?.user as { orgId?: string | null };
@@ -57,6 +59,8 @@ export default async function EventDetailPage({ params }: Props) {
   const isDraft = event.status === "draft";
   const isPublished = event.status === "published" || event.status === "completed";
   const isCancelled = event.status === "cancelled";
+  const isEditingPublished = isPublished && edit === "1";
+  const eventEditorBackHref = `/dashboard/events/${id}`;
 
   return (
     <div className="space-y-8">
@@ -84,8 +88,33 @@ export default async function EventDetailPage({ params }: Props) {
         />
       )}
 
+      {/* PUBLISHED + EDIT MODE: WYSIWYG editor with "Back to event" */}
+      {isEditingPublished && (
+        <EventPageEditor
+          event={{
+            id: event.id,
+            status: event.status,
+            title: event.title,
+            subtitle: event.subtitle,
+            description: event.description as JSONContent | null | undefined,
+            startsAt: event.startsAt,
+            durationMinutes: event.durationMinutes,
+            timezone: event.timezone,
+            coverImageUrl: event.coverImageUrl,
+            media: event.media as Array<{ type: "image" | "youtube"; url?: string; videoId?: string }> | null,
+            registrationFields: event.registrationFields as Array<{ key: string; label: string; type: "text" | "select" | "checkbox"; required?: boolean; options?: string[] }> | null,
+            eventSpeakers: event.eventSpeakers.map((es) => ({
+              speakerId: es.speakerId,
+              speaker: es.speaker,
+            })),
+          }}
+          mode="edit"
+          backHref={eventEditorBackHref}
+        />
+      )}
+
       {/* PUBLISHED: Status bar, analytics, actions, share link, registrations */}
-      {isPublished && (
+      {isPublished && !isEditingPublished && (
         <>
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
@@ -108,22 +137,44 @@ export default async function EventDetailPage({ params }: Props) {
             </div>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Public event page</CardTitle>
-              <CardDescription>
-                Share this link with attendees
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href={eventPath} className="text-primary hover:underline break-all block">
-                {eventUrl}
-              </Link>
-              <EmbedCodeSnippet embedUrl={embedUrl} />
-            </CardContent>
-          </Card>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Public event page</CardTitle>
+                  <CardDescription>
+                    Share this link with attendees
+                  </CardDescription>
+                </div>
+                <Link
+                  href={`/dashboard/events/${id}?edit=1`}
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 border border-input bg-background hover:bg-accent"
+                >
+                  Edit
+                </Link>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Link href={eventPath} className="text-primary hover:underline break-all block">
+                  {eventUrl}
+                </Link>
+                {event.meetLink && (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Google Meet link</p>
+                    <a
+                      href={event.meetLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline break-all block"
+                    >
+                      {event.meetLink}
+                    </a>
+                  </div>
+                )}
+                <EmbedCodeSnippet embedUrl={embedUrl} />
+              </CardContent>
+            </Card>
 
-          <Card>
+            <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Registrations</CardTitle>
@@ -172,6 +223,7 @@ export default async function EventDetailPage({ params }: Props) {
               )}
             </CardContent>
           </Card>
+          </div>
 
           {event.status === "completed" && event.recordingUrl && (
             <Card>

@@ -39,7 +39,11 @@ export function EventEditorActionsProvider({ children }: { children: ReactNode }
   );
 }
 
-export function DashboardHeader() {
+export function DashboardHeader({
+  isSuperAdmin = false,
+}: {
+  isSuperAdmin?: boolean;
+}) {
   const pathname = usePathname();
 
   const isEventNew = pathname?.includes("/events/new") ?? false;
@@ -49,24 +53,25 @@ export function DashboardHeader() {
 
   const isEventPage = isEventNew || isEventEdit;
 
+  // Hide header on event page - Back to dashboard + Publish live in the hero (EventPageHeader)
+  if (isEventPage) return null;
+
   return (
     <header>
       <div className="flex h-16 items-center justify-between px-6">
-        {isEventPage ? (
-          <Link
-            href="/dashboard"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ← Back to dashboard
-          </Link>
-        ) : (
-          <Link href="/dashboard" className="flex items-center">
-            <BrandLogo />
-          </Link>
-        )}
+        <Link href="/dashboard" className="flex items-center">
+          <BrandLogo />
+        </Link>
         <nav className="flex items-center gap-4">
-          {!isEventPage && <ProfileDropdown />}
-          {/* Publish button lives in the hero header (EventPageHeader) for draft events */}
+          {isSuperAdmin && (
+            <Link
+              href="/admin"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              Admin
+            </Link>
+          )}
+          <ProfileDropdown isSuperAdmin={isSuperAdmin} />
         </nav>
       </div>
     </header>

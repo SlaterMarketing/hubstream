@@ -13,6 +13,7 @@ import {
   SettingsIcon,
   LogOutIcon,
   GlobeIcon,
+  ShieldCheckIcon,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,11 @@ const LOCALES = [
   { code: "zh", name: "中文" },
 ] as const;
 
-export function ProfileDropdown() {
+export function ProfileDropdown({
+  isSuperAdmin = false,
+}: {
+  isSuperAdmin?: boolean;
+}) {
   const t = useTranslations("Common");
   const tDashboard = useTranslations("Dashboard");
   const { setTheme } = useTheme();
@@ -98,6 +103,14 @@ export function ProfileDropdown() {
         </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+        {isSuperAdmin && (
+          <DropdownMenuItem>
+            <Link href="/admin" className="flex cursor-default items-center gap-1.5">
+              <ShieldCheckIcon className="size-4 shrink-0" />
+              Admin panel
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem>
           <Link href="/dashboard/events/new" className="flex cursor-default items-center gap-1.5">
             <PlusIcon className="size-4 shrink-0" />

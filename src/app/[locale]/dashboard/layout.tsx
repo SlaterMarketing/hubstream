@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { isSuperAdmin } from "@/lib/admin";
 import {
   DashboardHeader,
   EventEditorActionsProvider,
@@ -20,7 +21,7 @@ export default async function DashboardLayout({ children, params }: Props) {
     redirect("/login");
   }
 
-  const user = session.user as { orgId?: string | null };
+  const user = session.user as { orgId?: string | null; email?: string | null };
   if (!user.orgId) {
     redirect("/onboarding");
   }
@@ -28,7 +29,7 @@ export default async function DashboardLayout({ children, params }: Props) {
   return (
     <EventEditorActionsProvider>
       <div className="flex min-h-screen flex-col">
-        <DashboardHeader />
+        <DashboardHeader isSuperAdmin={isSuperAdmin(user.email)} />
         <main className="flex-1 p-6">{children}</main>
       </div>
     </EventEditorActionsProvider>

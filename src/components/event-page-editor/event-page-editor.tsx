@@ -28,6 +28,8 @@ export type EventPageEditorProps = {
       socialLinks?: unknown } }[];
   };
   mode: "create" | "edit";
+  /** When set (e.g. editing published event), show "Back to event" + "Done" instead of "Back to dashboard" + "Publish" */
+  backHref?: string;
 };
 
 const DEFAULT_REGISTRATION_FIELDS: RegistrationField[] = [
@@ -39,7 +41,7 @@ const DEFAULT_REGISTRATION_FIELDS: RegistrationField[] = [
 
 const AUTO_SAVE_DEBOUNCE_MS = 800;
 
-export function EventPageEditor({ event, mode }: EventPageEditorProps) {
+export function EventPageEditor({ event, mode, backHref }: EventPageEditorProps) {
   const router = useRouter();
   const ctx = useEventEditorActions();
   const [error, setError] = useState("");
@@ -167,6 +169,7 @@ export function EventPageEditor({ event, mode }: EventPageEditorProps) {
         onDurationChange={setDurationMinutes}
         onTimezoneChange={setTimezone}
         onCoverImageChange={setCoverImageUrl}
+        backHref={backHref}
       />
 
       {/* Content area - matches public event page layout */}

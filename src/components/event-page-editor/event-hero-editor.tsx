@@ -20,6 +20,8 @@ type Props = {
   onDurationChange: (v: number) => void;
   onTimezoneChange: (v: string) => void;
   onCoverImageChange: (v: string) => void;
+  /** When set (e.g. editing published event), show "Back to event" + "Done" */
+  backHref?: string;
 };
 
 export function EventHeroEditor({
@@ -34,6 +36,7 @@ export function EventHeroEditor({
   onStartsAtChange,
   onDurationChange,
   onCoverImageChange,
+  backHref,
 }: Props) {
   const [showCoverUpload, setShowCoverUpload] = useState(false);
   const hasCoverImage = !!coverImageUrl;
@@ -96,12 +99,13 @@ export function EventHeroEditor({
         {hasCoverImage ? "Change cover" : "Add cover"}
       </button>
 
-      {/* Header - Back to dashboard instead of logo in editor */}
+      {/* Header - Back to dashboard/event instead of logo in editor */}
       <div className="absolute left-0 right-0 top-0 z-10">
         <EventPageHeader
           showRegistration={true}
           hasCoverImage={hasCoverImage}
           editorMode={true}
+          backHref={backHref}
         />
       </div>
 

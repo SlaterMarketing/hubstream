@@ -68,6 +68,16 @@ export async function getValidHubSpotAccessToken(
   return refreshed?.accessToken ?? null;
 }
 
+/** Convert field key to HubSpot property internal name (lowercase, underscores) */
+function toHubSpotPropertyName(key: string): string {
+  return key
+    .replace(/([A-Z])/g, "_$1")
+    .toLowerCase()
+    .replace(/^_/, "")
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9_]/g, "");
+}
+
 export async function createOrUpdateHubSpotContact(
   accessToken: string,
   data: {
@@ -76,6 +86,7 @@ export async function createOrUpdateHubSpotContact(
     lastName?: string;
     company?: string;
     jobTitle?: string;
+    customProperties?: Record<string, string | boolean>;
   }
 ): Promise<string | null> {
   const searchRes = await fetch(
@@ -112,6 +123,14 @@ export async function createOrUpdateHubSpotContact(
   if (data.lastName) properties.lastname = data.lastName;
   if (data.company) properties.company = data.company;
   if (data.jobTitle) properties.jobtitle = data.jobTitle;
+
+  // Sync custom fields to HubSpot (property must exist in HubSpot)
+  for (const [key, value] of Object.entries(data.customProperties ?? {})) {
+    const propName = toHubSpotPropertyName(key);
+    if (propName && value !== undefined && value !== null && value !== "") {
+      properties[propName] = typeof value === "boolean" ? String(value) : String(value);
+    }
+  }
 
   if (searchData.results?.length) {
     const contactId = searchData.results[0].id;

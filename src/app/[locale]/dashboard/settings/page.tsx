@@ -3,6 +3,7 @@ import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { HubSpotConnect } from "./hubspot-connect";
+import { HubSpotSetupInstructions } from "./hubspot-setup-instructions";
 import { GoogleCalendarConnect } from "./google-calendar-connect";
 import { OrgSettingsForm } from "./org-settings-form";
 import { BillingSection } from "./billing-section";
@@ -122,7 +123,10 @@ export default async function SettingsPage({ params, searchParams }: Props) {
               {search.message || "Failed to connect HubSpot."}
             </p>
           )}
-          <HubSpotConnect connected={hubspotConnected} />
+          <HubSpotConnect connected={hubspotConnected} locale={locale} />
+          <HubSpotSetupInstructions
+            redirectUri={`${process.env.NEXTAUTH_URL ?? "https://hubstream.app"}/api/hubspot/callback`}
+          />
           <div className="border-t pt-4">
             <p className="mb-2 text-sm font-medium">Google Calendar</p>
             <GoogleCalendarConnect

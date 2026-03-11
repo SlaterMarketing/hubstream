@@ -8,7 +8,10 @@ export async function GET(req: Request) {
   const error = searchParams.get("error");
 
   const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
-  const settingsPath = "/en/dashboard/settings";
+  const parts = (state ?? "").split("|");
+  const orgId = parts[0] || (state ?? "");
+  const locale = parts[1] || "en";
+  const settingsPath = `/${locale}/dashboard/settings`;
 
   if (error) {
     return NextResponse.redirect(
@@ -16,13 +19,11 @@ export async function GET(req: Request) {
     );
   }
 
-  if (!code || !state) {
+  if (!code || !state || !orgId) {
     return NextResponse.redirect(
-      new URL(`${settingsPath}?hubspot=error`, baseUrl)
+      new URL(`/en/dashboard/settings?hubspot=error`, baseUrl)
     );
   }
-
-  const orgId = state;
   const clientId = process.env.HUBSPOT_CLIENT_ID;
   const clientSecret = process.env.HUBSPOT_CLIENT_SECRET;
 

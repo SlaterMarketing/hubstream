@@ -8,7 +8,7 @@ const HUBSPOT_SCOPES = [
   "crm.objects.meetings.write",
 ].join(" ");
 
-export async function GET() {
+export async function GET(req: Request) {
   const session = await auth();
   const user = session?.user as { orgId?: string | null };
   if (!user?.orgId) {
@@ -23,9 +23,12 @@ export async function GET() {
     );
   }
 
+  const { searchParams } = new URL(req.url);
+  const locale = searchParams.get("locale") || "en";
+
   const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
   const redirectUri = `${baseUrl}/api/hubspot/callback`;
-  const state = user.orgId;
+  const state = `${user.orgId}|${locale}`;
 
   const url = new URL("https://app.hubspot.com/oauth/authorize");
   url.searchParams.set("client_id", clientId);

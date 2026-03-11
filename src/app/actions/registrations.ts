@@ -111,6 +111,7 @@ export async function registerForEvent(
         lastName: data.lastName?.trim() || undefined,
         company: data.company?.trim() || undefined,
         jobTitle: data.jobTitle?.trim() || undefined,
+        customProperties: Object.keys(customOnly).length ? customOnly : undefined,
       });
       if (contactId) {
         await db.registration.update({
