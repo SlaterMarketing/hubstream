@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { BrandLogo } from "@/components/brand-logo";
 import { ProfileDropdown } from "@/components/profile-dropdown";
 import { Button } from "@/components/ui/button";
-import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useRef, useState, type ReactNode } from "react";
 
 type EventEditorActions = {
   save: () => Promise<void>;
@@ -41,7 +41,6 @@ export function EventEditorActionsProvider({ children }: { children: ReactNode }
 
 export function DashboardHeader() {
   const pathname = usePathname();
-  const ctx = useEventEditorActions();
 
   const isEventNew = pathname?.includes("/events/new") ?? false;
   const isEventEdit =
@@ -49,21 +48,6 @@ export function DashboardHeader() {
     false;
 
   const isEventPage = isEventNew || isEventEdit;
-
-  const handlePublish = useCallback(async () => {
-    const actions = ctx?.actionsRef?.current;
-    if (actions?.publish) {
-      ctx?.setIsPublishing(true);
-      try {
-        await actions.publish();
-      } finally {
-        ctx?.setIsPublishing(false);
-      }
-    }
-  }, [ctx]);
-
-  const canPublish = ctx?.canPublish ?? false;
-  const isPublishing = ctx?.isPublishing ?? false;
 
   return (
     <header>
@@ -81,13 +65,8 @@ export function DashboardHeader() {
           </Link>
         )}
         <nav className="flex items-center gap-4">
-          {isEventPage ? (
-            <Button onClick={handlePublish} disabled={!canPublish || isPublishing}>
-              {isPublishing ? "Publishing..." : "Publish event"}
-            </Button>
-          ) : (
-            <ProfileDropdown />
-          )}
+          {!isEventPage && <ProfileDropdown />}
+          {/* Publish button lives in the hero header (EventPageHeader) for draft events */}
         </nav>
       </div>
     </header>

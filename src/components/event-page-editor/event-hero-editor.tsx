@@ -96,9 +96,13 @@ export function EventHeroEditor({
         {hasCoverImage ? "Change cover" : "Add cover"}
       </button>
 
-      {/* Header - matches event page */}
+      {/* Header - Back to dashboard instead of logo in editor */}
       <div className="absolute left-0 right-0 top-0 z-10">
-        <EventPageHeader showRegistration={true} hasCoverImage={hasCoverImage} />
+        <EventPageHeader
+          showRegistration={true}
+          hasCoverImage={hasCoverImage}
+          editorMode={true}
+        />
       </div>
 
       {/* Main content - centered, WYSIWYG editable */}

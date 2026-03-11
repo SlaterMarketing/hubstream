@@ -200,7 +200,7 @@ export function EventActions({ event }: EventActionsProps) {
           {loading === "publish" ? "Publishing..." : "Publish"}
         </Button>
       )}
-      {(event.status === "draft" || event.status === "published") && (
+      {(event.status === "draft" || event.status === "published" || event.status === "cancelled") && (
         <Button variant="outline" onClick={handleClone} disabled={!!loading}>
           {loading === "clone" ? "Cloning..." : "Duplicate"}
         </Button>
