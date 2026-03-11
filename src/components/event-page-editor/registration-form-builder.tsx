@@ -33,13 +33,13 @@ export function RegistrationFormBuilder({ fields, onChange }: Props) {
   }
 
   return (
-    <div className="rounded-xl border bg-card p-6">
+    <div className="rounded-xl bg-card p-6">
       <h3 className="mb-4 font-semibold">{t("registrationForm")}</h3>
       <p className="mb-4 text-sm text-muted-foreground">
         {t("registrationFormDescription")}
       </p>
 
-      <div className="mb-4 rounded-lg border bg-muted/30 py-2 px-3 text-sm">
+      <div className="mb-4 rounded-lg bg-muted/30 py-2 px-3 text-sm">
         <span className="font-medium">Email *</span>
         <span className="ml-2 text-muted-foreground">(always required)</span>
       </div>
@@ -48,7 +48,7 @@ export function RegistrationFormBuilder({ fields, onChange }: Props) {
         {fields.map((field, index) => (
           <div
             key={field.key}
-            className="flex items-start gap-2 rounded-lg border p-3"
+            className="flex items-start gap-2 rounded-lg p-3"
           >
             <div className="min-w-0 flex-1 space-y-2">
               <Input
@@ -64,7 +64,7 @@ export function RegistrationFormBuilder({ fields, onChange }: Props) {
                     type: e.target.value as "text" | "select" | "checkbox",
                   })
                 }
-                className="h-8 w-full rounded-md border border-input bg-background px-3 text-sm"
+                className="h-8 w-full border-0 border-b border-input bg-transparent px-0 py-2 text-sm focus:outline-none focus:border-foreground"
               >
                 {FIELD_TYPES.map((t) => (
                   <option key={t} value={t}>

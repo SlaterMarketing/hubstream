@@ -33,7 +33,7 @@ export function EventHeroEditor({
   onCoverImageChange,
 }: Props) {
   return (
-    <div className="space-y-6 rounded-xl border bg-card p-6">
+    <div className="space-y-6 rounded-xl bg-card p-6">
       <div className="space-y-2">
         <label className="text-sm font-medium text-muted-foreground">Cover image</label>
         <ImageUpload

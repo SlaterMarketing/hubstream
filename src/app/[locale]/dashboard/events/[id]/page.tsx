@@ -85,6 +85,7 @@ export default async function EventDetailPage({ params }: Props) {
         <EventPageEditor
           event={{
             id: event.id,
+            status: event.status,
             title: event.title,
             subtitle: event.subtitle,
             description: event.description as JSONContent | null | undefined,

@@ -94,7 +94,7 @@ export function SpeakersSection({ selectedIds, onChange }: Props) {
       {selectedSpeakers.map((speaker, index) => (
         <div
           key={speaker.id}
-          className="flex items-center gap-4 rounded-lg border p-4"
+          className="flex items-center gap-4 rounded-lg p-4"
         >
           {speaker.imageUrl ? (
             <img
@@ -153,7 +153,7 @@ export function SpeakersSection({ selectedIds, onChange }: Props) {
               type="button"
               onClick={() => toggleSpeaker(speaker.id)}
               className={cn(
-                "flex w-full items-center gap-4 rounded-lg border p-3 text-left transition-colors hover:bg-muted/50"
+                "flex w-full items-center gap-4 rounded-lg p-3 text-left transition-colors hover:bg-muted/50"
               )}
             >
               {speaker.imageUrl ? (
@@ -173,7 +173,7 @@ export function SpeakersSection({ selectedIds, onChange }: Props) {
           ))}
 
         {creating ? (
-          <div className="space-y-4 rounded-lg border p-4">
+          <div className="space-y-4 rounded-lg p-4">
             <Input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}

@@ -30,7 +30,7 @@ export function EventContentEditor({
 
   return (
     <div className="space-y-8">
-      <div className="rounded-xl border bg-card p-6">
+      <div className="rounded-xl bg-card p-6">
         <h3 className="mb-4 font-semibold">{t("description")}</h3>
         <TiptapEditor
           content={description}
@@ -39,12 +39,12 @@ export function EventContentEditor({
         />
       </div>
 
-      <div className="rounded-xl border bg-card p-6">
+      <div className="rounded-xl bg-card p-6">
         <h3 className="mb-4 font-semibold">{t("media")}</h3>
         <MediaSection media={media} onChange={onMediaChange} />
       </div>
 
-      <div className="rounded-xl border bg-card p-6">
+      <div className="rounded-xl bg-card p-6">
         <h3 className="mb-4 font-semibold">{t("speakers")}</h3>
         <SpeakersSection
           selectedIds={speakerIds}

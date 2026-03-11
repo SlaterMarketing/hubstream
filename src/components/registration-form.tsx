@@ -127,7 +127,7 @@ export function RegistrationForm({
                 id={field.key}
                 name={field.key}
                 required={field.required}
-                className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3"
+                className="mt-1 h-10 w-full border-0 border-b border-input bg-transparent px-0 py-2 focus:outline-none focus:border-foreground"
               >
                 <option value="">Select...</option>
                 {(field.options ?? []).map((opt) => (

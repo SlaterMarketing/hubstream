@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TiptapEditor } from "@/components/tiptap-editor";
-import { createEvent, updateEvent, publishEvent, cancelEvent, cloneEvent } from "@/app/actions/events";
+import { createEvent, updateEvent, publishEvent, cloneEvent } from "@/app/actions/events";
 import type { JSONContent } from "@tiptap/core";
 
 type EventFormProps = {
@@ -184,16 +184,6 @@ export function EventActions({ event }: EventActionsProps) {
     setLoading(null);
   }
 
-  async function handleCancel() {
-    if (!confirm("Cancel this event? All registrants will need to be notified separately.")) return;
-    setLoading("cancel");
-    setError("");
-    const result = await cancelEvent(event.id);
-    if (result.error) setError(result.error);
-    else router.push("/dashboard");
-    setLoading(null);
-  }
-
   async function handleClone() {
     setLoading("clone");
     setError("");
@@ -210,24 +200,9 @@ export function EventActions({ event }: EventActionsProps) {
           {loading === "publish" ? "Publishing..." : "Publish"}
         </Button>
       )}
-      {event.status === "published" && event.meetLink && (
-        <a
-          href={event.meetLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 border border-input bg-background hover:bg-accent"
-        >
-          Open Meet link
-        </a>
-      )}
       {(event.status === "draft" || event.status === "published") && (
         <Button variant="outline" onClick={handleClone} disabled={!!loading}>
           {loading === "clone" ? "Cloning..." : "Duplicate"}
-        </Button>
-      )}
-      {(event.status === "draft" || event.status === "published") && (
-        <Button variant="destructive" onClick={handleCancel} disabled={!!loading}>
-          {loading === "cancel" ? "Cancelling..." : "Cancel event"}
         </Button>
       )}
       {error && <p className="text-sm text-destructive w-full">{error}</p>}

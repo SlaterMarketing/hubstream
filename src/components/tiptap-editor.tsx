@@ -40,7 +40,7 @@ export function TiptapEditor({
 
   return (
     <div
-      className={`rounded-md border border-input bg-background ${className ?? ""}`}
+      className={`border-0 border-b border-input bg-transparent pb-2 focus-within:border-foreground transition-colors ${className ?? ""}`}
     >
       <EditorContent editor={editor} />
     </div>

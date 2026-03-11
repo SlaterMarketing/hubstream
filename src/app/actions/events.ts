@@ -76,7 +76,11 @@ export async function createEvent(formData: {
     return { error: "Unauthorized" };
   }
 
-  const slug = slugify(formData.title);
+  const title = formData.title?.trim() || "Untitled Event";
+  let slug = slugify(title);
+  if (slug === "untitled-event" || slug === "") {
+    slug = `untitled-event-${Date.now()}`;
+  }
   const existing = await db.event.findUnique({
     where: { orgId_slug: { orgId: user.orgId, slug } },
   });
@@ -90,7 +94,7 @@ export async function createEvent(formData: {
     data: {
       orgId: user.orgId,
       createdById: user.id,
-      title: formData.title,
+      title,
       slug,
       subtitle: formData.subtitle?.trim() || null,
       description: formData.description ?? undefined,

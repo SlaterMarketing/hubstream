@@ -1,23 +1,29 @@
-import { setRequestLocale } from "next-intl/server";
-import { EventPageEditor } from "@/components/event-page-editor/event-page-editor";
+"use client";
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+import { useEffect } from "react";
+import { useRouter } from "@/i18n/navigation";
+import { createEvent } from "@/app/actions/events";
 
-export default async function NewEventPage({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default function NewEventPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const defaultStartsAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16);
+    createEvent({
+      title: "Untitled Event",
+      startsAt: defaultStartsAt,
+      durationMinutes: 60,
+      timezone: "UTC",
+    }).then((result) => {
+      if ("eventId" in result && result.eventId) {
+        router.replace(`/dashboard/events/${result.eventId}`);
+      }
+    });
+  }, [router]);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Create new event</h1>
-        <p className="text-muted-foreground">
-          Create a draft, then publish to generate a Google Meet link
-        </p>
-      </div>
-      <EventPageEditor mode="create" />
+    <div className="flex min-h-[200px] items-center justify-center">
+      <p className="text-muted-foreground">Creating event...</p>
     </div>
   );
 }

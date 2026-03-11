@@ -1,20 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { JSONContent } from "@tiptap/core";
-import { createEvent, updateEvent, type RegistrationField } from "@/app/actions/events";
+import { updateEvent, publishEvent, type RegistrationField } from "@/app/actions/events";
+import { useEventEditorActions } from "@/components/dashboard-header";
 import { EventHeroEditor } from "./event-hero-editor";
 import { EventContentEditor } from "./event-content-editor";
 import { RegistrationFormBuilder } from "./registration-form-builder";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 export type MediaItem = { type: "image" | "youtube"; url?: string; videoId?: string };
 
 export type EventPageEditorProps = {
   event?: {
     id: string;
+    status?: string;
     title: string;
     subtitle?: string | null;
     description?: JSONContent | null;
@@ -37,10 +37,13 @@ const DEFAULT_REGISTRATION_FIELDS: RegistrationField[] = [
   { key: "jobTitle", label: "Job title", type: "text", required: false },
 ];
 
+const AUTO_SAVE_DEBOUNCE_MS = 800;
+
 export function EventPageEditor({ event, mode }: EventPageEditorProps) {
   const router = useRouter();
+  const ctx = useEventEditorActions();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [title, setTitle] = useState(event?.title ?? "");
   const [subtitle, setSubtitle] = useState(event?.subtitle ?? "");
@@ -63,47 +66,90 @@ export function EventPageEditor({ event, mode }: EventPageEditorProps) {
     event?.eventSpeakers?.map((es) => es.speakerId) ?? []
   );
 
-  async function handleSave() {
+  const performSave = useCallback(async () => {
+    if (!event?.id) return;
     setError("");
-    setLoading(true);
     try {
-      if (mode === "create") {
-        const result = await createEvent({
-          title,
-          subtitle: subtitle || undefined,
-          description,
-          startsAt,
-          durationMinutes,
-          timezone,
-          coverImageUrl: coverImageUrl || undefined,
-          media: media.length ? media : undefined,
-          registrationFields,
-          speakerIds,
-        });
-        if (result.error) throw new Error(result.error);
-        router.push(`/dashboard/events/${(result as { eventId: string }).eventId}`);
-      } else if (event) {
-        const result = await updateEvent(event.id, {
-          title,
-          subtitle: subtitle || undefined,
-          description,
-          startsAt,
-          durationMinutes,
-          timezone,
-          coverImageUrl: coverImageUrl || undefined,
-          media: media.length ? media : undefined,
-          registrationFields,
-          speakerIds,
-        });
-        if (result.error) throw new Error(result.error);
-        router.refresh();
-      }
+      const result = await updateEvent(event.id, {
+        title,
+        subtitle: subtitle || undefined,
+        description,
+        startsAt,
+        durationMinutes,
+        timezone,
+        coverImageUrl: coverImageUrl || undefined,
+        media: media.length ? media : undefined,
+        registrationFields,
+        speakerIds,
+      });
+      if (result.error) throw new Error(result.error);
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
     }
-  }
+  }, [
+    event?.id,
+    title,
+    subtitle,
+    description,
+    startsAt,
+    durationMinutes,
+    timezone,
+    coverImageUrl,
+    media,
+    registrationFields,
+    speakerIds,
+    router,
+  ]);
+
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (mode !== "edit" || !event?.id) return;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+      performSave();
+      saveTimeoutRef.current = null;
+    }, AUTO_SAVE_DEBOUNCE_MS);
+    return () => {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    };
+  }, [
+    mode,
+    event?.id,
+    performSave,
+    title,
+    subtitle,
+    description,
+    startsAt,
+    durationMinutes,
+    timezone,
+    coverImageUrl,
+    media,
+    registrationFields,
+    speakerIds,
+  ]);
+
+  const handlePublish = useCallback(async () => {
+    if (!event?.id) return;
+    const result = await publishEvent(event.id);
+    if (result.error) setError(result.error);
+    else router.refresh();
+  }, [event?.id, router]);
+
+  useEffect(() => {
+    if (!ctx) return;
+    const canPublish = !!event?.id && event.status === "draft";
+    ctx.setCanPublish(canPublish);
+    ctx.actionsRef.current = { save: performSave, publish: handlePublish };
+    return () => {
+      ctx.actionsRef.current = null;
+      ctx.setCanPublish(false);
+    };
+  }, [ctx, event?.id, event?.status, performSave, handlePublish]);
 
   return (
     <div className="space-y-8">
@@ -143,11 +189,6 @@ export function EventPageEditor({ event, mode }: EventPageEditorProps) {
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
-      <div className="flex gap-2">
-        <Button onClick={handleSave} disabled={loading}>
-          {loading ? "Saving..." : mode === "create" ? "Create event" : "Save changes"}
-        </Button>
-      </div>
     </div>
   );
 }

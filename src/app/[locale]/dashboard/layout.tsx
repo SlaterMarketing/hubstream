@@ -1,9 +1,10 @@
 import { setRequestLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { Link } from "@/i18n/navigation";
-import { BrandLogo } from "@/components/brand-logo";
-import { ProfileDropdown } from "@/components/profile-dropdown";
+import {
+  DashboardHeader,
+  EventEditorActionsProvider,
+} from "@/components/dashboard-header";
 
 type Props = {
   children: React.ReactNode;
@@ -25,20 +26,11 @@ export default async function DashboardLayout({ children, params }: Props) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b">
-        <div className="flex h-16 items-center justify-between px-6">
-          <Link href="/dashboard" className="flex items-center">
-            <BrandLogo />
-          </Link>
-          <nav className="flex items-center gap-4">
-            <ProfileDropdown />
-          </nav>
-        </div>
-      </header>
-      <main className="flex-1 p-6">
-        {children}
-      </main>
-    </div>
+    <EventEditorActionsProvider>
+      <div className="flex min-h-screen flex-col">
+        <DashboardHeader />
+        <main className="flex-1 p-6">{children}</main>
+      </div>
+    </EventEditorActionsProvider>
   );
 }
