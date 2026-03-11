@@ -45,6 +45,13 @@ export default async function SettingsPage({ params, searchParams }: Props) {
 
   async function reconnectGoogleCalendar() {
     "use server";
+    // PrismaAdapter doesn't update Account tokens on re-login - it keeps the old record.
+    // Deleting the Account forces a fresh create with new tokens when they sign in.
+    if (userId) {
+      await db.account.deleteMany({
+        where: { userId, provider: "google" },
+      });
+    }
     await signOut({ redirectTo: `/${locale}/login?reconnect=calendar` });
   }
 

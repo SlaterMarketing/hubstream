@@ -10,7 +10,7 @@ export async function createCalendarEventWithMeet(
     end: Date;
     timezone: string;
   }
-): Promise<{ meetLink: string; eventId: string } | null> {
+): Promise<{ meetLink: string; eventId: string } | { error: string }> {
   try {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
@@ -56,10 +56,19 @@ export async function createCalendarEventWithMeet(
     if (meetLink && eventId) {
       return { meetLink, eventId };
     }
-    return null;
-  } catch (error) {
+    return { error: "No Meet link in response" };
+  } catch (error: unknown) {
+    const err = error as { message?: string; code?: number; response?: { data?: { error?: { message?: string; code?: number } } } };
+    const message = err?.response?.data?.error?.message ?? err?.message ?? "Unknown error";
+    const code = err?.response?.data?.error?.code ?? err?.code;
     console.error("Google Calendar API error:", error);
-    return null;
+    if (code === 401 || message.includes("invalid_grant") || message.includes("Token has been expired") || message.includes("Invalid Credentials")) {
+      return { error: "Token expired or revoked. Please reconnect Google Calendar in Settings." };
+    }
+    if (code === 403 || message.includes("access_denied") || message.includes("Forbidden") || message.includes("Calendar API has not been used")) {
+      return { error: "Calendar access denied. Enable the Google Calendar API in your GCP project and reconnect in Settings." };
+    }
+    return { error: message || "Failed to create calendar event" };
   }
 }
 

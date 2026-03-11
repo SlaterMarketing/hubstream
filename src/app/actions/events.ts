@@ -147,8 +147,8 @@ export async function publishEvent(eventId: string) {
     }
   );
 
-  if (!meetResult) {
-    return { error: "Failed to create Google Meet link. Please try again." };
+  if ("error" in meetResult) {
+    return { error: meetResult.error };
   }
 
   await db.event.update({
