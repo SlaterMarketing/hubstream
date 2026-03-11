@@ -24,24 +24,16 @@ export function ImageUpload({ value, onChange, type = "event", className }: Prop
     setUploading(true);
 
     try {
-      const res = await fetch("/api/upload/presign", {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", type);
+
+      const res = await fetch("/api/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          filename: file.name,
-          contentType: file.type,
-          type,
-        }),
+        body: formData,
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
-
-      const uploadRes = await fetch(data.uploadUrl, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type },
-      });
-      if (!uploadRes.ok) throw new Error("Upload failed");
 
       onChange(data.publicUrl);
     } catch (err) {

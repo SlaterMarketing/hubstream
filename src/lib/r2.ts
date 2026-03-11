@@ -26,6 +26,24 @@ function getR2Client() {
   });
 }
 
+export async function uploadObject(
+  key: string,
+  body: Buffer | Uint8Array | ReadableStream,
+  contentType: string
+): Promise<void> {
+  const client = getR2Client();
+  if (!R2_BUCKET_NAME) throw new Error("R2_BUCKET_NAME not configured");
+
+  await client.send(
+    new PutObjectCommand({
+      Bucket: R2_BUCKET_NAME,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+    })
+  );
+}
+
 export async function getPresignedUploadUrl(
   key: string,
   contentType: string,
