@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 const HUBSPOT_SCOPES = [
+  "oauth",
   "crm.objects.contacts.read",
   "crm.objects.contacts.write",
-  "crm.objects.meetings.read",
-  "crm.objects.meetings.write",
 ].join(" ");
 
 export async function GET(req: Request) {
