@@ -30,7 +30,12 @@
     "settings": "Einstellungen",
     "upcoming": "Kommende",
     "past": "Vergangene",
-    "draft": "Entwurf"
+    "draft": "Entwurf",
+    "published": "Veröffentlicht",
+    "listView": "Liste",
+    "calendarView": "Kalender",
+    "createEvent": "Neue Veranstaltung erstellen",
+    "noEvents": "Noch keine Veranstaltungen"
   },
   "Homepage": {
     "nav": { "features": "Funktionen", "pricing": "Preise", "faq": "FAQ", "privacy": "Datenschutz", "dashboard": "Dashboard" },

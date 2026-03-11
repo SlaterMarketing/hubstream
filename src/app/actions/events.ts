@@ -49,13 +49,26 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
+export type RegistrationField = {
+  key: string;
+  label: string;
+  type: "text" | "select" | "checkbox";
+  required?: boolean;
+  options?: string[];
+};
+
 export async function createEvent(formData: {
   title: string;
+  subtitle?: string;
   description?: JSONContent;
   startsAt: string;
   durationMinutes: number;
   timezone: string;
   speakers?: string;
+  coverImageUrl?: string;
+  media?: Array<{ type: "image" | "youtube"; url?: string; videoId?: string }>;
+  registrationFields?: RegistrationField[];
+  speakerIds?: string[];
 }) {
   const session = await auth();
   const user = session?.user as { id?: string; orgId?: string | null };
@@ -72,7 +85,6 @@ export async function createEvent(formData: {
   }
 
   const startsAt = new Date(formData.startsAt);
-  const endsAt = new Date(startsAt.getTime() + formData.durationMinutes * 60 * 1000);
 
   const event = await db.event.create({
     data: {
@@ -80,14 +92,28 @@ export async function createEvent(formData: {
       createdById: user.id,
       title: formData.title,
       slug,
+      subtitle: formData.subtitle?.trim() || null,
       description: formData.description ?? undefined,
       startsAt,
-      durationMinutes: formData.durationMinutes,
+      durationMinutes: formData.durationMinutes ?? 60,
       timezone: formData.timezone || "UTC",
       speakers: formData.speakers?.trim() || null,
+      coverImageUrl: formData.coverImageUrl?.trim() || null,
+      media: formData.media ?? undefined,
+      registrationFields: formData.registrationFields ?? undefined,
       status: "draft",
     },
   });
+
+  if (formData.speakerIds?.length) {
+    await db.eventSpeaker.createMany({
+      data: formData.speakerIds.map((speakerId, i) => ({
+        eventId: event.id,
+        speakerId,
+        sortOrder: i,
+      })),
+    });
+  }
 
   revalidatePath("/dashboard");
   return { success: true, eventId: event.id };
@@ -169,12 +195,17 @@ export async function updateEvent(
   eventId: string,
   formData: {
     title?: string;
+    subtitle?: string;
     description?: JSONContent;
     startsAt?: string;
     durationMinutes?: number;
     timezone?: string;
     speakers?: string;
     recordingUrl?: string;
+    coverImageUrl?: string;
+    media?: Array<{ type: "image" | "youtube"; url?: string; videoId?: string }>;
+    registrationFields?: RegistrationField[];
+    speakerIds?: string[];
   }
 ) {
   const session = await auth();
@@ -190,12 +221,16 @@ export async function updateEvent(
 
   const updates: Record<string, unknown> = {};
   if (formData.title !== undefined) updates.title = formData.title;
+  if (formData.subtitle !== undefined) updates.subtitle = formData.subtitle?.trim() || null;
   if (formData.description !== undefined) updates.description = formData.description;
   if (formData.startsAt !== undefined) updates.startsAt = new Date(formData.startsAt);
   if (formData.durationMinutes !== undefined) updates.durationMinutes = formData.durationMinutes;
   if (formData.timezone !== undefined) updates.timezone = formData.timezone;
   if (formData.speakers !== undefined) updates.speakers = formData.speakers?.trim() || null;
   if (formData.recordingUrl !== undefined) updates.recordingUrl = formData.recordingUrl?.trim() || null;
+  if (formData.coverImageUrl !== undefined) updates.coverImageUrl = formData.coverImageUrl?.trim() || null;
+  if (formData.media !== undefined) updates.media = formData.media;
+  if (formData.registrationFields !== undefined) updates.registrationFields = formData.registrationFields;
 
   if (formData.title && formData.title !== event.title) {
     const slug = slugify(formData.title);
@@ -246,6 +281,19 @@ export async function updateEvent(
     where: { id: eventId },
     data: updates,
   });
+
+  if (formData.speakerIds !== undefined) {
+    await db.eventSpeaker.deleteMany({ where: { eventId } });
+    if (formData.speakerIds.length > 0) {
+      await db.eventSpeaker.createMany({
+        data: formData.speakerIds.map((speakerId, i) => ({
+          eventId,
+          speakerId,
+          sortOrder: i,
+        })),
+      });
+    }
+  }
 
   if (isReschedule) {
     const registrations = await db.registration.findMany({
@@ -353,6 +401,7 @@ export async function cloneEvent(eventId: string) {
 
   const event = await db.event.findFirst({
     where: { id: eventId, orgId: user.orgId },
+    include: { eventSpeakers: { orderBy: { sortOrder: "asc" } } },
   });
   if (!event) return { error: "Event not found" };
 
@@ -373,14 +422,28 @@ export async function cloneEvent(eventId: string) {
       createdById: user.id,
       title: `${event.title} (Copy)`,
       slug,
+      subtitle: event.subtitle,
       description: event.description ?? undefined,
       startsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
       durationMinutes: event.durationMinutes,
       timezone: event.timezone,
       speakers: event.speakers,
+      coverImageUrl: event.coverImageUrl,
+      ...(event.media && { media: event.media }),
+      ...(event.registrationFields && { registrationFields: event.registrationFields }),
       status: "draft",
     },
   });
+
+  if (event.eventSpeakers.length > 0) {
+    await db.eventSpeaker.createMany({
+      data: event.eventSpeakers.map((es) => ({
+        eventId: newEvent.id,
+        speakerId: es.speakerId,
+        sortOrder: es.sortOrder,
+      })),
+    });
+  }
 
   revalidatePath("/dashboard");
   return { success: true, eventId: newEvent.id };

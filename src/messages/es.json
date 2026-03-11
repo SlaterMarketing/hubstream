@@ -30,7 +30,12 @@
     "settings": "Configuración",
     "upcoming": "Próximos",
     "past": "Pasados",
-    "draft": "Borrador"
+    "draft": "Borrador",
+    "published": "Publicado",
+    "listView": "Lista",
+    "calendarView": "Calendario",
+    "createEvent": "Crear nuevo evento",
+    "noEvents": "Aún no hay eventos"
   },
   "Homepage": {
     "nav": { "features": "Características", "pricing": "Precios", "faq": "FAQ", "privacy": "Privacidad", "dashboard": "Panel" },

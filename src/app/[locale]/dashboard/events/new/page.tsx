@@ -1,6 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { EventForm } from "@/components/event-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EventPageEditor } from "@/components/event-page-editor/event-page-editor";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -18,14 +17,7 @@ export default async function NewEventPage({ params }: Props) {
           Create a draft, then publish to generate a Google Meet link
         </p>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Event details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <EventForm mode="create" />
-        </CardContent>
-      </Card>
+      <EventPageEditor mode="create" />
     </div>
   );
 }

@@ -54,7 +54,7 @@ export async function getPublicUrl(key: string): Promise<string> {
 
 export function generateUploadKey(
   orgId: string,
-  type: "logo" | "cover",
+  type: "logo" | "cover" | "event" | "speaker",
   filename: string
 ): string {
   const ext = filename.split(".").pop() || "jpg";

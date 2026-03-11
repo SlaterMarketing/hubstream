@@ -3,7 +3,8 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { EventForm, EventActions } from "@/components/event-form";
+import { EventPageEditor } from "@/components/event-page-editor/event-page-editor";
+import { EventActions } from "@/components/event-form";
 import { TiptapRenderer } from "@/components/tiptap-renderer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -39,14 +40,19 @@ export default async function EventDetailPage({ params }: Props) {
         where: { status: "confirmed" },
         orderBy: { createdAt: "desc" },
       },
+      eventSpeakers: {
+        include: { speaker: true },
+        orderBy: { sortOrder: "asc" },
+      },
     },
   });
 
   if (!event) notFound();
 
   const orgSlug = event.organization.slug;
-  const eventUrl = `/${locale}/${orgSlug}/${event.slug}`;
+  const eventPath = `/${orgSlug}/${event.slug}`;
   const baseUrl = process.env.NEXTAUTH_URL ?? "https://hubstream.app";
+  const eventUrl = `${baseUrl}/${locale}${eventPath}`;
   const embedUrl = `${baseUrl}/embed/${event.id}`;
 
   return (
@@ -76,31 +82,25 @@ export default async function EventDetailPage({ params }: Props) {
       </div>
 
       {event.status !== "cancelled" && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Edit event</CardTitle>
-            <CardDescription>
-              {event.startsAt.toLocaleString()} • {event.durationMinutes} min
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <EventForm
-              event={{
-                id: event.id,
-                title: event.title,
-                description: event.description as JSONContent | null | undefined,
-                startsAt: event.startsAt,
-                durationMinutes: event.durationMinutes,
-                timezone: event.timezone,
-                speakers: event.speakers,
-                status: event.status,
-                meetLink: event.meetLink,
-                recordingUrl: event.recordingUrl,
-              }}
-              mode="edit"
-            />
-          </CardContent>
-        </Card>
+        <EventPageEditor
+          event={{
+            id: event.id,
+            title: event.title,
+            subtitle: event.subtitle,
+            description: event.description as JSONContent | null | undefined,
+            startsAt: event.startsAt,
+            durationMinutes: event.durationMinutes,
+            timezone: event.timezone,
+            coverImageUrl: event.coverImageUrl,
+            media: event.media as Array<{ type: "image" | "youtube"; url?: string; videoId?: string }> | null,
+            registrationFields: event.registrationFields as Array<{ key: string; label: string; type: "text" | "select" | "checkbox"; required?: boolean; options?: string[] }> | null,
+            eventSpeakers: event.eventSpeakers.map((es) => ({
+              speakerId: es.speakerId,
+              speaker: es.speaker,
+            })),
+          }}
+          mode="edit"
+        />
       )}
 
       {(event.status === "published" || event.status === "completed") && (
@@ -112,7 +112,7 @@ export default async function EventDetailPage({ params }: Props) {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Link href={eventUrl} className="text-primary hover:underline break-all block">
+            <Link href={eventPath} className="text-primary hover:underline break-all block">
               {eventUrl}
             </Link>
             <EmbedCodeSnippet embedUrl={embedUrl} />

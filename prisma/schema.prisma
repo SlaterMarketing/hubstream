@@ -22,8 +22,22 @@ model Organization {
   users              User[]
   events             Event[]
   customFields       CustomField[]
+  speakers           Speaker[]
   integrationSettings IntegrationSettings?
   subscription       Subscription?
+}
+
+model Speaker {
+  id          String   @id @default(cuid())
+  orgId       String
+  name        String
+  bio         String?
+  imageUrl    String?
+  socialLinks Json?   // { twitter?, linkedin?, website? }
+  createdAt   DateTime @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  events       EventSpeaker[]
 }
 
 model Subscription {
@@ -95,29 +109,45 @@ model VerificationToken {
 }
 
 model Event {
-  id               String   @id @default(cuid())
-  orgId            String
-  createdById      String
-  title            String
-  slug             String
-  description      Json?    // Tiptap JSON
-  startsAt         DateTime
-  durationMinutes  Int      @default(60)
-  timezone         String   @default("UTC")
-  meetLink         String?
-  calendarEventId  String?
-  status           String   @default("draft") // "draft" | "published" | "completed" | "cancelled"
-  speakers         String?
-  coverImageUrl    String?
-  recordingUrl     String?
-  customFields     Json?    // References to CustomField ids for this event
-  createdAt        DateTime @default(now())
+  id                 String   @id @default(cuid())
+  orgId              String
+  createdById        String
+  title              String
+  slug               String
+  subtitle           String?
+  description        Json?    // Tiptap JSON
+  startsAt           DateTime
+  durationMinutes    Int      @default(60)
+  timezone           String   @default("UTC")
+  meetLink           String?
+  calendarEventId    String?
+  status             String   @default("draft") // "draft" | "published" | "completed" | "cancelled"
+  speakers           String?  // Legacy comma-separated; prefer eventSpeakers
+  coverImageUrl      String?
+  recordingUrl       String?
+  media              Json?    // [{ type: "image"|"youtube", url, videoId? }]
+  registrationFields Json?    // [{ key, label, type, required }] - email always required
+  customFields       Json?    // Deprecated; use registrationFields
+  createdAt          DateTime @default(now())
 
-  organization Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  registrations Registration[]
+  organization   Organization   @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  registrations  Registration[]
   pageViews      PageView[]
+  eventSpeakers  EventSpeaker[]
 
   @@unique([orgId, slug])
+}
+
+model EventSpeaker {
+  id        String  @id @default(cuid())
+  eventId   String
+  speakerId String
+  sortOrder Int     @default(0)
+
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  speaker Speaker @relation(fields: [speakerId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, speakerId])
 }
 
 model Registration {

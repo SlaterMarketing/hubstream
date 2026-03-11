@@ -15,6 +15,8 @@ function generateCancelToken(): string {
   return randomBytes(32).toString("hex");
 }
 
+const STANDARD_KEYS = ["firstName", "lastName", "company", "jobTitle"];
+
 export async function registerForEvent(
   eventId: string,
   data: {
@@ -23,6 +25,7 @@ export async function registerForEvent(
     lastName?: string;
     company?: string;
     jobTitle?: string;
+    customFieldValues?: Record<string, string | boolean>;
     utmSource?: string;
     utmMedium?: string;
     utmCampaign?: string;
@@ -66,6 +69,14 @@ export async function registerForEvent(
   const headersList = await headers();
   const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ?? headersList.get("x-real-ip") ?? null;
 
+  const customValues = data.customFieldValues ?? {};
+  const customOnly: Record<string, string | boolean> = {};
+  for (const [k, v] of Object.entries(customValues)) {
+    if (!STANDARD_KEYS.includes(k) && v !== undefined && v !== "") {
+      customOnly[k] = v;
+    }
+  }
+
   const registration = await db.registration.create({
     data: {
       eventId,
@@ -74,6 +85,7 @@ export async function registerForEvent(
       lastName: data.lastName?.trim() || null,
       company: data.company?.trim() || null,
       jobTitle: data.jobTitle?.trim() || null,
+      customFieldValues: Object.keys(customOnly).length ? customOnly : undefined,
       utmSource: data.utmSource?.trim() || null,
       utmMedium: data.utmMedium?.trim() || null,
       utmCampaign: data.utmCampaign?.trim() || null,

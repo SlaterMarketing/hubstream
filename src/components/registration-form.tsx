@@ -1,15 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand-logo";
 import { Input } from "@/components/ui/input";
 import { registerForEvent } from "@/app/actions/registrations";
 
+type RegistrationField = {
+  key: string;
+  label: string;
+  type: "text" | "select" | "checkbox";
+  required?: boolean;
+  options?: string[];
+};
+
+const DEFAULT_FIELDS: RegistrationField[] = [
+  { key: "firstName", label: "First name", type: "text", required: false },
+  { key: "lastName", label: "Last name", type: "text", required: false },
+  { key: "company", label: "Company", type: "text", required: false },
+  { key: "jobTitle", label: "Job title", type: "text", required: false },
+];
+
 type Props = {
   eventId: string;
   locale?: string;
+  registrationFields?: RegistrationField[];
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -19,12 +34,12 @@ type Props = {
 export function RegistrationForm({
   eventId,
   locale,
+  registrationFields = DEFAULT_FIELDS,
   utmSource,
   utmMedium,
   utmCampaign,
   showPoweredBy = false,
 }: Props) {
-  const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,12 +50,25 @@ export function RegistrationForm({
     setLoading(true);
 
     const form = e.currentTarget;
+    const fieldValues: Record<string, string | boolean> = {};
+    for (const field of registrationFields) {
+      const el = form.elements.namedItem(field.key) as HTMLInputElement | null;
+      if (el) {
+        if (field.type === "checkbox") {
+          fieldValues[field.key] = el.checked;
+        } else {
+          fieldValues[field.key] = el.value;
+        }
+      }
+    }
+
     const result = await registerForEvent(eventId, {
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      firstName: (form.elements.namedItem("firstName") as HTMLInputElement).value,
-      lastName: (form.elements.namedItem("lastName") as HTMLInputElement).value,
-      company: (form.elements.namedItem("company") as HTMLInputElement).value,
-      jobTitle: (form.elements.namedItem("jobTitle") as HTMLInputElement).value,
+      firstName: (fieldValues.firstName as string)?.trim() || undefined,
+      lastName: (fieldValues.lastName as string)?.trim() || undefined,
+      company: (fieldValues.company as string)?.trim() || undefined,
+      jobTitle: (fieldValues.jobTitle as string)?.trim() || undefined,
+      customFieldValues: fieldValues,
       utmSource: utmSource ?? (form.elements.namedItem("utm_source") as HTMLInputElement)?.value,
       utmMedium: utmMedium ?? (form.elements.namedItem("utm_medium") as HTMLInputElement)?.value,
       utmCampaign: utmCampaign ?? (form.elements.namedItem("utm_campaign") as HTMLInputElement)?.value,
@@ -69,20 +97,6 @@ export function RegistrationForm({
   return (
     <div className="space-y-4">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="firstName" className="text-sm font-medium">
-              First name
-            </label>
-            <Input id="firstName" name="firstName" className="mt-1" />
-          </div>
-          <div>
-            <label htmlFor="lastName" className="text-sm font-medium">
-              Last name
-            </label>
-            <Input id="lastName" name="lastName" className="mt-1" />
-          </div>
-        </div>
         <div>
           <label htmlFor="email" className="text-sm font-medium">
             Email *
@@ -95,18 +109,49 @@ export function RegistrationForm({
             className="mt-1"
           />
         </div>
-        <div>
-          <label htmlFor="company" className="text-sm font-medium">
-            Company
-          </label>
-          <Input id="company" name="company" className="mt-1" />
-        </div>
-        <div>
-          <label htmlFor="jobTitle" className="text-sm font-medium">
-            Job title
-          </label>
-          <Input id="jobTitle" name="jobTitle" className="mt-1" />
-        </div>
+        {registrationFields.map((field) => (
+          <div key={field.key}>
+            <label htmlFor={field.key} className="text-sm font-medium">
+              {field.label} {field.required ? "*" : ""}
+            </label>
+            {field.type === "text" && (
+              <Input
+                id={field.key}
+                name={field.key}
+                className="mt-1"
+                required={field.required}
+              />
+            )}
+            {field.type === "select" && (
+              <select
+                id={field.key}
+                name={field.key}
+                required={field.required}
+                className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3"
+              >
+                <option value="">Select...</option>
+                {(field.options ?? []).map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            )}
+            {field.type === "checkbox" && (
+              <div className="mt-1 flex items-center gap-2">
+                <input
+                  id={field.key}
+                  name={field.key}
+                  type="checkbox"
+                  required={field.required}
+                />
+                <label htmlFor={field.key} className="text-sm">
+                  {field.label}
+                </label>
+              </div>
+            )}
+          </div>
+        ))}
         <div className="flex items-start gap-2">
           <input
             id="consent"

@@ -30,7 +30,12 @@
     "settings": "Paramètres",
     "upcoming": "À venir",
     "past": "Passés",
-    "draft": "Brouillon"
+    "draft": "Brouillon",
+    "published": "Publié",
+    "listView": "Liste",
+    "calendarView": "Calendrier",
+    "createEvent": "Créer un événement",
+    "noEvents": "Aucun événement"
   },
   "Homepage": {
     "nav": { "features": "Fonctionnalités", "pricing": "Tarifs", "faq": "FAQ", "privacy": "Confidentialité", "dashboard": "Tableau de bord" },

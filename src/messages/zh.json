@@ -30,7 +30,12 @@
     "settings": "设置",
     "upcoming": "即将举行",
     "past": "已结束",
-    "draft": "草稿"
+    "draft": "草稿",
+    "published": "已发布",
+    "listView": "列表",
+    "calendarView": "日历",
+    "createEvent": "创建新活动",
+    "noEvents": "暂无活动"
   },
   "Homepage": {
     "nav": { "features": "功能", "pricing": "定价", "faq": "常见问题", "privacy": "隐私", "dashboard": "仪表板" },

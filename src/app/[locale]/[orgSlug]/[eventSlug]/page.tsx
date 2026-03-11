@@ -5,7 +5,6 @@ import { TiptapRenderer } from "@/components/tiptap-renderer";
 import { RegistrationForm } from "@/components/registration-form";
 import { PageViewTracker } from "@/components/page-view-tracker";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
   params: Promise<{ locale: string; orgSlug: string; eventSlug: string }>;
@@ -26,7 +25,7 @@ export async function generateMetadata({ params }: Props) {
   if (!event || !org) return { title: "HubStream" };
   return {
     title: event.title,
-    description: event.speakers ? `With ${event.speakers}` : undefined,
+    description: event.subtitle || (event.speakers ? `With ${event.speakers}` : undefined),
     openGraph: {
       title: event.title,
       type: "website",
@@ -47,6 +46,12 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
 
   const event = await db.event.findFirst({
     where: { orgId: org.id, slug: eventSlug },
+    include: {
+      eventSpeakers: {
+        include: { speaker: true },
+        orderBy: { sortOrder: "asc" },
+      },
+    },
   });
   if (!event) notFound();
 
@@ -73,6 +78,16 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
     }),
   };
 
+  const registrationFields = (event.registrationFields ?? []) as Array<{
+    key: string;
+    label: string;
+    type: "text" | "select" | "checkbox";
+    required?: boolean;
+    options?: string[];
+  }>;
+
+  const media = (event.media ?? []) as Array<{ type: string; url?: string; videoId?: string }>;
+
   return (
     <>
       <PageViewTracker
@@ -85,84 +100,191 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-4">
-      <div className="mx-auto max-w-2xl space-y-8">
-        <div className="flex justify-end">
-          <LanguageSwitcher />
-        </div>
-        {isCancelled && (
-          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center text-destructive">
-            This event has been cancelled.
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-4">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex justify-end mb-6">
+            <LanguageSwitcher />
           </div>
-        )}
 
-        {isPast && !isCancelled && (
-          <div className="rounded-lg border bg-muted p-4 text-center text-muted-foreground">
-            This event has ended.
-          </div>
-        )}
+          {isCancelled && (
+            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center text-destructive mb-8">
+              This event has been cancelled.
+            </div>
+          )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">{event.title}</CardTitle>
-            <CardDescription>
-              {event.startsAt.toLocaleString(undefined, {
-                dateStyle: "full",
-                timeStyle: "short",
-              })}{" "}
-              • {event.durationMinutes} min
-            </CardDescription>
-            {event.speakers && (
-              <p className="text-sm text-muted-foreground">
-                Speakers: {event.speakers}
-              </p>
-            )}
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {event.description && (
-              <div>
-                <TiptapRenderer content={event.description} />
-              </div>
-            )}
+          {isPast && !isCancelled && (
+            <div className="rounded-lg border bg-muted p-4 text-center text-muted-foreground mb-8">
+              This event has ended.
+            </div>
+          )}
 
-            {showRegistration && (
-              <div className="space-y-4">
-                <RegistrationForm
-                  eventId={event.id}
-                  locale={locale}
-                  utmSource={search.utm_source}
-                  utmMedium={search.utm_medium}
-                  utmCampaign={search.utm_campaign}
-                />
-                {event.meetLink && (
-                  <a
-                    href={event.meetLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block text-center text-sm text-primary hover:underline"
-                  >
-                    Join Google Meet
-                  </a>
+          <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
+            <div className="space-y-8">
+              <header className="space-y-2">
+                {event.coverImageUrl && (
+                  <img
+                    src={event.coverImageUrl}
+                    alt=""
+                    className="w-full aspect-video object-cover rounded-xl"
+                  />
                 )}
-              </div>
-            )}
+                <h1 className="text-3xl font-bold">{event.title}</h1>
+                {event.subtitle && (
+                  <p className="text-lg text-muted-foreground">{event.subtitle}</p>
+                )}
+                <p className="text-muted-foreground">
+                  {event.startsAt.toLocaleString(undefined, {
+                    dateStyle: "full",
+                    timeStyle: "short",
+                  })}{" "}
+                  • {event.durationMinutes} min
+                </p>
+              </header>
 
-            {isPast && event.recordingUrl && (
-              <div>
-                <a
-                  href={event.recordingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline font-medium"
-                >
-                  Watch recording
-                </a>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              {event.description && (
+                <div className="prose dark:prose-invert max-w-none">
+                  <TiptapRenderer content={event.description} />
+                </div>
+              )}
+
+              {media.length > 0 && (
+                <div className="space-y-4">
+                  {media.map((item, i) =>
+                    item.type === "image" && item.url ? (
+                      <img
+                        key={i}
+                        src={item.url}
+                        alt=""
+                        className="w-full rounded-xl"
+                      />
+                    ) : item.type === "youtube" && item.videoId ? (
+                      <div key={i} className="aspect-video overflow-hidden rounded-xl">
+                        <iframe
+                          src={`https://www.youtube.com/embed/${item.videoId}`}
+                          title="YouTube"
+                          className="h-full w-full"
+                          allowFullScreen
+                        />
+                      </div>
+                    ) : null
+                  )}
+                </div>
+              )}
+
+              {event.eventSpeakers.length > 0 && (
+                <div className="space-y-4">
+                  <h2 className="text-xl font-semibold">Speakers</h2>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {event.eventSpeakers.map(({ speaker }) => (
+                      <div
+                        key={speaker.id}
+                        className="flex gap-4 rounded-lg border p-4"
+                      >
+                        {speaker.imageUrl ? (
+                          <img
+                            src={speaker.imageUrl}
+                            alt={speaker.name}
+                            className="size-16 rounded-full object-cover shrink-0"
+                          />
+                        ) : (
+                          <div className="size-16 rounded-full bg-muted shrink-0" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-medium">{speaker.name}</p>
+                          {speaker.bio && (
+                            <p className="text-sm text-muted-foreground mt-1">
+                              {speaker.bio}
+                            </p>
+                          )}
+                          {(speaker.socialLinks as { twitter?: string; linkedin?: string; website?: string }) && (
+                            <div className="mt-2 flex gap-2">
+                              {(speaker.socialLinks as { twitter?: string }).twitter && (
+                                <a
+                                  href={(speaker.socialLinks as { twitter?: string }).twitter}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm text-primary hover:underline"
+                                >
+                                  Twitter
+                                </a>
+                              )}
+                              {(speaker.socialLinks as { linkedin?: string }).linkedin && (
+                                <a
+                                  href={(speaker.socialLinks as { linkedin?: string }).linkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm text-primary hover:underline"
+                                >
+                                  LinkedIn
+                                </a>
+                              )}
+                              {(speaker.socialLinks as { website?: string }).website && (
+                                <a
+                                  href={(speaker.socialLinks as { website?: string }).website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm text-primary hover:underline"
+                                >
+                                  Website
+                                </a>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {!event.eventSpeakers.length && event.speakers && (
+                <p className="text-sm text-muted-foreground">
+                  Speakers: {event.speakers}
+                </p>
+              )}
+            </div>
+
+            <aside className="lg:sticky lg:top-24 lg:self-start">
+              {showRegistration && (
+                <div className="rounded-xl border bg-card p-6">
+                  <h2 className="mb-4 text-lg font-semibold">Register</h2>
+                  <RegistrationForm
+                    eventId={event.id}
+                    locale={locale}
+                    registrationFields={registrationFields}
+                    utmSource={search.utm_source}
+                    utmMedium={search.utm_medium}
+                    utmCampaign={search.utm_campaign}
+                  />
+                  {event.meetLink && (
+                    <a
+                      href={event.meetLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 block text-center text-sm text-primary hover:underline"
+                    >
+                      Join Google Meet
+                    </a>
+                  )}
+                </div>
+              )}
+            </aside>
+          </div>
+
+          {isPast && event.recordingUrl && (
+            <div className="mt-8">
+              <a
+                href={event.recordingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                Watch recording
+              </a>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 }

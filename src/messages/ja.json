@@ -30,7 +30,12 @@
     "settings": "設定",
     "upcoming": "今後の予定",
     "past": "過去",
-    "draft": "下書き"
+    "draft": "下書き",
+    "published": "公開済み",
+    "listView": "リスト",
+    "calendarView": "カレンダー",
+    "createEvent": "新しいイベントを作成",
+    "noEvents": "イベントがありません"
   },
   "Homepage": {
     "nav": { "features": "機能", "pricing": "料金", "faq": "FAQ", "privacy": "プライバシー", "dashboard": "ダッシュボード" },

@@ -16,6 +16,13 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
     where: { id: eventId },
     include: { organization: true },
   });
+  const registrationFields = (event?.registrationFields ?? []) as Array<{
+    key: string;
+    label: string;
+    type: "text" | "select" | "checkbox";
+    required?: boolean;
+    options?: string[];
+  }>;
   if (!event) notFound();
 
   const now = new Date();
@@ -50,6 +57,7 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
               <RegistrationForm
                 eventId={event.id}
                 locale="en"
+                registrationFields={registrationFields}
                 utmSource={search.utm_source}
                 utmMedium={search.utm_medium}
                 utmCampaign={search.utm_campaign}

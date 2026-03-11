@@ -30,7 +30,12 @@
     "settings": "Configurações",
     "upcoming": "Próximos",
     "past": "Passados",
-    "draft": "Rascunho"
+    "draft": "Rascunho",
+    "published": "Publicado",
+    "listView": "Lista",
+    "calendarView": "Calendário",
+    "createEvent": "Criar novo evento",
+    "noEvents": "Nenhum evento ainda"
   },
   "Homepage": {
     "nav": { "features": "Recursos", "pricing": "Preços", "faq": "FAQ", "privacy": "Privacidade", "dashboard": "Painel" },

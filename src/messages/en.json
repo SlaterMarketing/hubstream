@@ -30,7 +30,24 @@
     "settings": "Settings",
     "upcoming": "Upcoming",
     "past": "Past",
-    "draft": "Draft"
+    "draft": "Draft",
+    "published": "Published",
+    "listView": "List",
+    "calendarView": "Calendar",
+    "createEvent": "Create new event",
+    "noEvents": "No events yet"
+  },
+  "EventEditor": {
+    "registrationForm": "Registration form",
+    "registrationFormDescription": "Add or remove fields. Email is always required.",
+    "addField": "Add field",
+    "description": "Description",
+    "media": "Media",
+    "speakers": "Speakers",
+    "addSpeaker": "Add speaker",
+    "createSpeaker": "Create speaker",
+    "uploadImage": "Upload image",
+    "youtubeUrl": "YouTube URL"
   },
   "Homepage": {
     "nav": {
