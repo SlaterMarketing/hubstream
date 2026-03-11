@@ -88,6 +88,12 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
 
   const media = (event.media ?? []) as Array<{ type: string; url?: string; videoId?: string }>;
 
+  const formattedDateTime = event.startsAt.toLocaleString(undefined, {
+    dateStyle: "full",
+    timeStyle: "short",
+  });
+  const durationText = `${event.durationMinutes} min`;
+
   return (
     <>
       <PageViewTracker
@@ -100,12 +106,41 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-4">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex justify-end mb-6">
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+        {/* Hero section - 100vh x 100vw */}
+        <section className="relative flex h-screen w-full min-w-full flex-col items-center justify-center px-4">
+          {event.coverImageUrl && (
+            <>
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${event.coverImageUrl})` }}
+              />
+              <div className="absolute inset-0 bg-black/50" />
+            </>
+          )}
+          <div className="absolute right-4 top-4 z-10">
             <LanguageSwitcher />
           </div>
+          <div
+            className={`relative z-0 flex flex-col items-center justify-center text-center ${
+              event.coverImageUrl ? "text-white [&_.text-muted-foreground]:text-white/80" : ""
+            }`}
+          >
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              {event.title}
+            </h1>
+            {event.subtitle && (
+              <p className="mt-4 max-w-2xl text-lg text-muted-foreground sm:text-xl">
+                {event.subtitle}
+              </p>
+            )}
+            <p className="mt-6 text-lg text-muted-foreground">
+              {formattedDateTime} • {durationText}
+            </p>
+          </div>
+        </section>
 
+        <div className="mx-auto max-w-6xl py-12 px-4">
           {isCancelled && (
             <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center text-destructive mb-8">
               This event has been cancelled.
@@ -120,26 +155,6 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
 
           <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
             <div className="space-y-8">
-              <header className="space-y-2">
-                {event.coverImageUrl && (
-                  <img
-                    src={event.coverImageUrl}
-                    alt=""
-                    className="w-full aspect-video object-cover rounded-xl"
-                  />
-                )}
-                <h1 className="text-3xl font-bold">{event.title}</h1>
-                {event.subtitle && (
-                  <p className="text-lg text-muted-foreground">{event.subtitle}</p>
-                )}
-                <p className="text-muted-foreground">
-                  {event.startsAt.toLocaleString(undefined, {
-                    dateStyle: "full",
-                    timeStyle: "short",
-                  })}{" "}
-                  • {event.durationMinutes} min
-                </p>
-              </header>
 
               {event.description && (
                 <div className="prose dark:prose-invert max-w-none">

@@ -32,9 +32,44 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
   const showRegistration = isPublished && !isPast && !isCancelled;
   const showPoweredBy = event.organization.plan !== "pro";
 
+  const formattedDateTime = event.startsAt.toLocaleString(undefined, {
+    dateStyle: "full",
+    timeStyle: "short",
+  });
+
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-4">
-      <div className="mx-auto max-w-md">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      {/* Hero section - 100vh x 100vw */}
+      <section className="relative flex h-screen w-full flex-col items-center justify-center px-4">
+        {event.coverImageUrl && (
+          <>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${event.coverImageUrl})` }}
+            />
+            <div className="absolute inset-0 bg-black/50" />
+          </>
+        )}
+        <div
+          className={`relative z-0 flex flex-col items-center justify-center text-center ${
+            event.coverImageUrl ? "text-white [&_.text-muted-foreground]:text-white/80" : ""
+          }`}
+        >
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+            {event.title}
+          </h1>
+          {event.subtitle && (
+            <p className="mt-4 max-w-2xl text-lg text-muted-foreground sm:text-xl">
+              {event.subtitle}
+            </p>
+          )}
+          <p className="mt-6 text-lg text-muted-foreground">
+            {formattedDateTime} • {event.durationMinutes} min
+          </p>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-md p-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">{event.title}</CardTitle>
