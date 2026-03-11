@@ -152,7 +152,8 @@ export function EventPageEditor({ event, mode }: EventPageEditorProps) {
   }, [ctx, event?.id, event?.status, performSave, handlePublish]);
 
   return (
-    <div className="space-y-8">
+    <div className="relative -mx-6 -mt-6 min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      {/* Hero - WYSIWYG, matches public event page */}
       <EventHeroEditor
         title={title}
         subtitle={subtitle}
@@ -168,27 +169,34 @@ export function EventPageEditor({ event, mode }: EventPageEditorProps) {
         onCoverImageChange={setCoverImageUrl}
       />
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
-        <div className="space-y-8">
-          <EventContentEditor
-            description={description}
-            media={media}
-            speakerIds={speakerIds}
-            orgId={undefined}
-            onDescriptionChange={setDescription}
-            onMediaChange={setMedia}
-            onSpeakerIdsChange={setSpeakerIds}
-          />
-        </div>
-        <div className="lg:sticky lg:top-24 lg:self-start">
-          <RegistrationFormBuilder
-            fields={registrationFields}
-            onChange={setRegistrationFields}
-          />
+      {/* Content area - matches public event page layout */}
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-12">
+        <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
+          <div className="space-y-8">
+            <EventContentEditor
+              description={description}
+              media={media}
+              speakerIds={speakerIds}
+              orgId={undefined}
+              onDescriptionChange={setDescription}
+              onMediaChange={setMedia}
+              onSpeakerIdsChange={setSpeakerIds}
+            />
+          </div>
+          <aside className="lg:sticky lg:top-24 lg:self-start" id="register">
+            <RegistrationFormBuilder
+              fields={registrationFields}
+              onChange={setRegistrationFields}
+            />
+          </aside>
         </div>
       </div>
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && (
+        <p className="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-destructive/90 px-4 py-2 text-sm text-destructive-foreground">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

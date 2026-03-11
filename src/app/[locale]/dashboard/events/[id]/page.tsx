@@ -57,13 +57,11 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">{event.title}</h1>
-          <p className="text-muted-foreground">
-            {event.status} • {event._count.registrations} registrations
-          </p>
-        </div>
+      {/* Compact bar: status, analytics, actions - title lives in WYSIWYG hero */}
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-sm text-muted-foreground">
+          {event.status} • {event._count.registrations} registrations
+        </p>
         <div className="flex items-center gap-2">
           <Link
             href={`/dashboard/events/${id}/analytics`}
