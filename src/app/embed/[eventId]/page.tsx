@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { RegistrationForm } from "@/components/registration-form";
 import { EventPageHeader } from "@/components/event-page-header";
+import { EventScrollCircle } from "@/components/event-scroll-circle";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
@@ -39,9 +40,10 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
   });
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <EventScrollCircle />
       {/* Hero section - 100vh x 100vw */}
-      <section className="relative flex h-screen w-full flex-col items-center justify-center px-4">
+      <section className="relative z-10 flex h-screen w-full flex-col items-center justify-center px-4">
         <EventPageHeader
           showRegistration={showRegistration}
           hasCoverImage={!!event.coverImageUrl}
@@ -74,7 +76,7 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
         </div>
       </section>
 
-      <div className="mx-auto max-w-md p-4" id="register">
+      <div className="relative z-10 mx-auto max-w-md bg-zinc-50 p-4 dark:bg-zinc-950" id="register">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">{event.title}</CardTitle>

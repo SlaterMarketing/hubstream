@@ -5,6 +5,7 @@ import { TiptapRenderer } from "@/components/tiptap-renderer";
 import { RegistrationForm } from "@/components/registration-form";
 import { PageViewTracker } from "@/components/page-view-tracker";
 import { EventPageHeader } from "@/components/event-page-header";
+import { EventScrollCircle } from "@/components/event-scroll-circle";
 
 type Props = {
   params: Promise<{ locale: string; orgSlug: string; eventSlug: string }>;
@@ -106,9 +107,10 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
+        <EventScrollCircle />
         {/* Hero section - 100vh x 100vw */}
-        <section className="relative flex h-screen w-full min-w-full flex-col items-center justify-center px-4">
+        <section className="relative z-10 flex h-screen w-full min-w-full flex-col items-center justify-center px-4">
           {event.coverImageUrl && (
             <>
               <div
@@ -141,7 +143,7 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
           </div>
         </section>
 
-        <div className="mx-auto max-w-6xl py-12 px-4">
+        <div className="relative z-10 mx-auto max-w-6xl bg-zinc-50 py-12 px-4 dark:bg-zinc-950">
           {isCancelled && (
             <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center text-destructive mb-8">
               This event has been cancelled.
