@@ -211,7 +211,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
                         <TableCell>{r.company ?? "—"}</TableCell>
                         <TableCell>{r.jobTitle ?? "—"}</TableCell>
                         <TableCell>
-                          {r.createdAt.toLocaleDateString(undefined, {
+                          {r.createdAt.toLocaleString(undefined, {
                             dateStyle: "short",
                             timeStyle: "short",
                           })}
@@ -297,7 +297,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
                         <TableCell>{r.company ?? "—"}</TableCell>
                         <TableCell>{r.jobTitle ?? "—"}</TableCell>
                         <TableCell>
-                          {r.createdAt.toLocaleDateString(undefined, {
+                          {r.createdAt.toLocaleString(undefined, {
                             dateStyle: "short",
                             timeStyle: "short",
                           })}
