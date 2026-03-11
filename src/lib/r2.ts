@@ -73,7 +73,11 @@ export async function getPublicUrl(key: string): Promise<string> {
   }
   const base = R2_PUBLIC_URL.replace(/\/$/, "");
   const path = key.startsWith("/") ? key : `/${key}`;
-  return `${base}${path}`;
+  const url = `${base}${path}`;
+  // Ensure absolute URL for img src (browsers treat protocol-less URLs as relative)
+  return url.startsWith("http://") || url.startsWith("https://")
+    ? url
+    : `https://${url}`;
 }
 
 export function generateUploadKey(
