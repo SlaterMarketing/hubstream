@@ -26,10 +26,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const validTypes = ["event", "speaker", "cover", "logo"];
-  if (!validTypes.includes(type)) {
+  const validTypes = ["event", "speaker", "cover", "logo"] as const;
+  if (!validTypes.includes(type as (typeof validTypes)[number])) {
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   }
+  const uploadType = type as (typeof validTypes)[number];
 
   if (!ALLOWED_TYPES.includes(file.type)) {
     return NextResponse.json(
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const key = generateUploadKey(user.orgId, type, file.name);
+    const key = generateUploadKey(user.orgId, uploadType, file.name);
     const buffer = Buffer.from(await file.arrayBuffer());
     await uploadObject(key, buffer, file.type);
     const publicUrl = await getPublicUrl(key);

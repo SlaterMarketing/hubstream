@@ -19,12 +19,13 @@ export async function POST(req: Request) {
     );
   }
 
-  const validTypes = ["event", "speaker", "cover", "logo"];
-  if (!validTypes.includes(type)) {
+  const validTypes = ["event", "speaker", "cover", "logo"] as const;
+  if (!validTypes.includes(type as (typeof validTypes)[number])) {
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   }
+  const uploadType = type as (typeof validTypes)[number];
 
-  const key = generateUploadKey(user.orgId, type, filename);
+  const key = generateUploadKey(user.orgId, uploadType, filename);
   const uploadUrl = await getPresignedUploadUrl(key, contentType);
   const publicUrl = await getPublicUrl(key);
 
