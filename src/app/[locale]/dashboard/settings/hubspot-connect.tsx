@@ -6,7 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { disconnectHubSpot } from "@/app/actions/integrations";
 
-export function HubSpotConnect({ connected, locale = "en" }: { connected: boolean; locale?: string }) {
+export function HubSpotConnect({ connected, locale = "en", returnTo }: { connected: boolean; locale?: string; returnTo?: string }) {
   const [disconnecting, setDisconnecting] = useState(false);
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export function HubSpotConnect({ connected, locale = "en" }: { connected: boolea
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm text-muted-foreground">HubSpot is connected.</span>
         <a
-          href={`/api/hubspot/auth?locale=${encodeURIComponent(locale)}`}
+          href={`/api/hubspot/auth?locale=${encodeURIComponent(locale)}${returnTo ? `&returnTo=${encodeURIComponent(returnTo)}` : ""}`}
           className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
         >
           Reconnect
@@ -43,7 +43,7 @@ export function HubSpotConnect({ connected, locale = "en" }: { connected: boolea
 
   return (
     <a
-      href={`/api/hubspot/auth?locale=${encodeURIComponent(locale)}`}
+      href={`/api/hubspot/auth?locale=${encodeURIComponent(locale)}${returnTo ? `&returnTo=${encodeURIComponent(returnTo)}` : ""}`}
       className={cn(buttonVariants())}
     >
       Connect HubSpot

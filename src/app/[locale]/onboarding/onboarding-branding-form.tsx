@@ -27,7 +27,7 @@ export function OnboardingBrandingForm({ orgId, logoUrl, ctaColor }: Props) {
     try {
       const result = await updateOrganization({ logoUrl: logo || null, ctaColor: color || null });
       if (result.error) throw new Error(result.error);
-      router.push("/dashboard");
+      router.push("/onboarding?step=integrations");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -37,7 +37,7 @@ export function OnboardingBrandingForm({ orgId, logoUrl, ctaColor }: Props) {
   }
 
   function handleSkip() {
-    router.push("/dashboard");
+    router.push("/onboarding?step=integrations");
     router.refresh();
   }
 

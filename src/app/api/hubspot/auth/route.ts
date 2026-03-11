@@ -25,10 +25,11 @@ export async function GET(req: Request) {
 
   const { searchParams } = new URL(req.url);
   const locale = searchParams.get("locale") || "en";
+  const returnTo = searchParams.get("returnTo") || "";
 
   const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
   const redirectUri = `${baseUrl}/api/hubspot/callback`;
-  const state = `${user.orgId}|${locale}`;
+  const state = `${user.orgId}|${locale}|${returnTo}`;
 
   const url = new URL("https://app.hubspot.com/oauth/authorize");
   url.searchParams.set("client_id", clientId);

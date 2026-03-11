@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { OnboardingForm } from "./onboarding-form";
 import { OnboardingBrandingForm } from "./onboarding-branding-form";
+import { OnboardingIntegrationsForm } from "./onboarding-integrations-form";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -28,8 +29,8 @@ export default async function OnboardingPage({ params, searchParams }: Props) {
     include: { organization: true },
   });
 
-  // Has org and not explicitly on branding step - go to dashboard
-  if (dbUser?.orgId && step !== "branding") {
+  // Has org and not on a known onboarding step - go to dashboard
+  if (dbUser?.orgId && step !== "branding" && step !== "integrations") {
     redirect("/dashboard");
   }
 
@@ -42,7 +43,24 @@ export default async function OnboardingPage({ params, searchParams }: Props) {
     );
   }
 
-  // Has org, show optional branding step
+  // Integrations step
+  if (step === "integrations") {
+    const integrationSettings = await db.integrationSettings.findUnique({
+      where: { orgId: dbUser.orgId! },
+    });
+    const hubspotConnected = !!integrationSettings?.hubspotAccessToken;
+
+    return (
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <OnboardingIntegrationsForm
+          hubspotConnected={hubspotConnected}
+          locale={locale}
+        />
+      </div>
+    );
+  }
+
+  // Branding step (default when has org)
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <OnboardingBrandingForm
