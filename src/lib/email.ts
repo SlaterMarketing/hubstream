@@ -12,7 +12,7 @@ function getResend() {
   return new Resend(key);
 }
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "HubStream <noreply@hubstream.app>";
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "HubStream <noreply@mail.hubstream.app>";
 const BASE_URL = process.env.NEXTAUTH_URL ?? "https://hubstream.app";
 
 export async function sendEmail({

@@ -9,7 +9,17 @@ import {
   createOrUpdateHubSpotContact,
   createHubSpotMeeting,
 } from "@/lib/hubspot";
+import { addAttendeeToCalendarEvent } from "@/lib/google-calendar";
 import { sendConfirmationEmail } from "@/lib/email";
+
+async function getGoogleTokens(userId: string) {
+  const account = await db.account.findFirst({
+    where: { userId, provider: "google" },
+  });
+  return account?.access_token && account?.refresh_token
+    ? { accessToken: account.access_token, refreshToken: account.refresh_token }
+    : null;
+}
 
 function generateCancelToken(): string {
   return randomBytes(32).toString("hex");
@@ -145,17 +155,34 @@ export async function registerForEvent(
     }
   }
 
-  try {
-    await sendConfirmationEmail({
-      to: email,
-      eventTitle: event.title,
-      startsAt: event.startsAt,
-      durationMinutes: event.durationMinutes,
-      meetLink: event.meetLink,
-      cancelToken: registration.cancelToken,
-    });
-  } catch {
-    // Email is best-effort; don't fail registration
+  // Prefer Google Calendar invite (from organizer's Gmail) to save Resend API usage
+  let sentViaGoogle = false;
+  if (event.calendarEventId && event.createdById) {
+    const tokens = await getGoogleTokens(event.createdById);
+    if (tokens) {
+      sentViaGoogle = await addAttendeeToCalendarEvent(
+        tokens.accessToken,
+        tokens.refreshToken,
+        event.calendarEventId,
+        email
+      );
+    }
+  }
+
+  // Fall back to Resend confirmation when Google Calendar isn't available
+  if (!sentViaGoogle) {
+    try {
+      await sendConfirmationEmail({
+        to: email,
+        eventTitle: event.title,
+        startsAt: event.startsAt,
+        durationMinutes: event.durationMinutes,
+        meetLink: event.meetLink,
+        cancelToken: registration.cancelToken,
+      });
+    } catch {
+      // Email is best-effort; don't fail registration
+    }
   }
 
   return { success: true, registrationId: registration.id };
