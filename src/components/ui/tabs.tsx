@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
+  HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
@@ -23,7 +23,7 @@ const TabsList = React.forwardRef<
 TabsList.displayName = "TabsList";
 
 const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Tab>,
+  HTMLButtonElement,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Tab>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Tab
@@ -39,7 +39,7 @@ const TabsTrigger = React.forwardRef<
 TabsTrigger.displayName = "TabsTrigger";
 
 const TabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Panel>,
+  HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Panel>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Panel

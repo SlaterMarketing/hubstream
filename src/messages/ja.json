@@ -27,5 +27,21 @@
     "upcoming": "今後の予定",
     "past": "過去",
     "draft": "下書き"
+  },
+  "Homepage": {
+    "nav": { "features": "機能", "pricing": "料金", "faq": "FAQ", "privacy": "プライバシー", "dashboard": "ダッシュボード" },
+    "hero": { "headlineBefore": "Google MeetとHubSpot向けの", "headlineHighlight": "軽量ウェビナー管理", "headlineAfter": "", "subheadline": "イベント作成、申込フォームの埋め込み、CRMとの同期が簡単に。", "ctaPrimary": "無料で始める", "ctaSecondary": "使い方を見る", "ctaDashboard": "ダッシュボードへ", "trustLine": "クレジットカード不要。無料プランは永久無料。" },
+    "socialProof": { "trustedBy": "以下のチームに信頼されています" },
+    "howItWorks": { "title": "使い方", "subtitle": "3つの簡単なステップで最初のウェビナーを開催。", "create": { "title": "作成", "description": "リッチテキストエディタでウェビナーを設定。" }, "embed": { "title": "埋め込み", "description": "1行のコードで申込フォームをサイトに追加。" }, "engage": { "title": "参加", "description": "申込者は自動でHubSpotに同期。" } },
+    "features": { "title": "機能", "subtitle": "プロのウェビナーに必要なすべて。", "proBadge": "Pro", "googleMeet": { "title": "Google Meet連携", "description": "Meetリンクを自動生成。" }, "hubspotSync": { "title": "HubSpot CRM同期", "description": "連絡先とミーティングをCRMに自動同期。" }, "embed": { "title": "埋め込みフォーム", "description": "1行でどのサイトにも埋め込み可能。" }, "customFields": { "title": "カスタムフィールド", "description": "必要なデータを収集。" }, "customDomain": { "title": "カスタムドメイン", "description": "イベントページを自社ドメインで。" }, "team": { "title": "チーム連携", "description": "メンバー無制限。" } },
+    "integrations": { "title": "連携", "subtitle": "お使いのツールとシームレスに連携。", "flow": "申込 → HubSpot連絡先 → Meetリンク → 参加者", "hubspot": { "name": "HubSpot", "description": "CRM同期" }, "googleMeet": { "name": "Google Meet", "description": "ミーティングリンク" }, "embed": { "name": "埋め込み", "description": "1行フォーム" } },
+    "interactiveDemo": { "title": "お試しください", "subtitle": "サイトでのフォームの見え方を確認。", "firstName": "名", "lastName": "姓", "email": "メール", "register": "登録", "demoNote": "デモフォーム — データは保存されません" },
+    "caseStudy": { "title": "成長するチームに信頼されています" },
+    "stats": { "webinars": "ウェビナー開催", "registrations": "申込処理", "setupTime": "セットアップ時間削減" },
+    "testimonials": { "title": "お客様の声", "subtitle": "チームはHubStreamでウェビナーを簡単に開催。", "1": { "quote": "HubStreamでセットアップ時間が数時間から数分に。", "author": "Sarah Chen", "title": "マーケティングディレクター", "company": "TechFlow", "metric": "80%高速化" }, "2": { "quote": "ついにシンプルに使えるツールが。", "author": "Marcus Johnson", "title": "デマンドジェネ責任者", "company": "ScaleUp", "metric": "3倍のウェビナー" }, "3": { "quote": "HubStreamに乗り換え。半額、学習コストゼロ。", "author": "Elena Rodriguez", "title": "イベントマネージャー", "company": "GrowthLabs", "metric": "50%コスト削減" } },
+    "pricing": { "title": "料金", "subtitle": "無料で開始。必要に応じてアップグレード。", "monthly": "月額", "yearly": "年額", "saveBadge": "17%お得", "mostPopular": "人気No.1", "billedYearly": "年額一括払い", "allPlansTitle": "全プランに含まれる", "allPlans": { "1": "メール通知", "2": "GDPR対応", "3": "分析ダッシュボード" }, "free": { "name": "無料", "description": "お試し用", "cta": "始める", "poweredBy": "提供:", "onEmbeds": "埋め込み時", "features": { "1": "同時1本の公開ウェビナー", "2": "ウェビナーあたり最大50名", "3": "チームメンバー1名", "4": "placeholder" } }, "pro": { "name": "Pro", "description": "成長するチーム向け", "cta": "無料トライアル", "features": { "1": "ウェビナー無制限", "2": "ウェビナーあたり最大100名", "3": "チームメンバー無制限", "4": "埋め込み時のブランディングなし", "5": "カスタムドメイン", "6": "カスタム申込フィールド" } } },
+    "faq": { "title": "よくある質問", "subtitle": "HubStreamについて。", "whatIs": { "question": "HubStreamとは？", "answer": "HubStreamはGoogle MeetとHubSpot向けの軽量ウェビナー管理ツールです。" }, "googleMeet": { "question": "Google Meet連携はどうなりますか？", "answer": "公開時にHubStreamが自動でMeetリンクを作成します。" }, "hubspotSync": { "question": "HubSpot同期はどうなりますか？", "answer": "申込時にHubStreamがHubSpotの連絡先を作成・更新します。" }, "embed": { "question": "どのサイトにもフォームを埋め込めますか？", "answer": "はい。HubStreamは1行のiframeコードを提供します。" }, "freeLimits": { "question": "無料プランの制限に達すると？", "answer": "Proへのアップグレードが必要です。" }, "upgrade": { "question": "Proへのアップグレード方法は？", "answer": "設定から「Proにアップグレード」をクリック。" }, "freeTrial": { "question": "無料トライアルはありますか？", "answer": "無料プランは永久無料です。" }, "customDomain": { "question": "カスタムドメインは対応していますか？", "answer": "はい、Proプランで対応。" } },
+    "finalCta": { "title": "ウェビナーを効率化する準備はできましたか？", "subtitle": "無料プランあり。クレジットカード不要。", "cta": "無料で始める" },
+    "footer": { "tagline": "Google MeetとHubSpot向けの軽量ウェビナー管理。", "product": "製品", "resources": "リソース", "privacy": "プライバシーポリシー" }
   }
 }

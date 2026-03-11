@@ -27,5 +27,219 @@
     "upcoming": "Upcoming",
     "past": "Past",
     "draft": "Draft"
+  },
+  "Homepage": {
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "privacy": "Privacy",
+      "dashboard": "Dashboard"
+    },
+    "hero": {
+      "headlineBefore": "Lightweight webinar management for",
+      "headlineHighlight": "Google Meet and HubSpot",
+      "headlineAfter": "",
+      "subheadline": "Create events, embed signup forms, and sync everything to your CRM. No complex setup.",
+      "ctaPrimary": "Get started free",
+      "ctaSecondary": "See how it works",
+      "ctaDashboard": "Go to Dashboard",
+      "trustLine": "No credit card required. Free forever on the starter plan."
+    },
+    "socialProof": {
+      "trustedBy": "Trusted by teams at"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "subtitle": "Three simple steps to run your first webinar.",
+      "create": {
+        "title": "Create",
+        "description": "Set up your webinar with a rich text editor. Add details, agenda, and speaker info."
+      },
+      "embed": {
+        "title": "Embed",
+        "description": "Drop the signup form on your site with one line of code. Works on any website."
+      },
+      "engage": {
+        "title": "Engage",
+        "description": "Attendees auto-sync to HubSpot. Google Meet link generated automatically when you publish."
+      }
+    },
+    "features": {
+      "title": "Features",
+      "subtitle": "Everything you need to run professional webinars without the complexity.",
+      "proBadge": "Pro",
+      "googleMeet": {
+        "title": "Google Meet Integration",
+        "description": "Auto-generate Meet links when you publish. No manual setup or calendar juggling."
+      },
+      "hubspotSync": {
+        "title": "HubSpot CRM Sync",
+        "description": "Contacts and meeting engagements sync to your CRM automatically."
+      },
+      "embed": {
+        "title": "Embeddable Forms",
+        "description": "One-line embed for any website, blog, or landing page."
+      },
+      "customFields": {
+        "title": "Custom Registration Fields",
+        "description": "Collect the data you need with custom fields on your signup form."
+      },
+      "customDomain": {
+        "title": "Custom Domain",
+        "description": "Brand your event pages with your own domain."
+      },
+      "team": {
+        "title": "Team Collaboration",
+        "description": "Invite unlimited team members to manage events together."
+      }
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Works seamlessly with the tools you already use.",
+      "flow": "Registration → HubSpot Contact → Google Meet Link → Attendee",
+      "hubspot": {
+        "name": "HubSpot",
+        "description": "CRM sync, contacts, engagements"
+      },
+      "googleMeet": {
+        "name": "Google Meet",
+        "description": "Auto-generated meeting links"
+      },
+      "embed": {
+        "name": "Embed",
+        "description": "One-line form embed"
+      }
+    },
+    "interactiveDemo": {
+      "title": "Try it yourself",
+      "subtitle": "See how the registration form looks on your site.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "register": "Register",
+      "demoNote": "Demo form — no data is saved"
+    },
+    "caseStudy": {
+      "title": "Trusted by growing teams"
+    },
+    "stats": {
+      "webinars": "webinars hosted",
+      "registrations": "registrations processed",
+      "setupTime": "setup time saved"
+    },
+    "testimonials": {
+      "title": "What customers say",
+      "subtitle": "Teams use HubStream to run webinars without the hassle.",
+      "1": {
+        "quote": "HubStream cut our webinar setup time from hours to minutes. The HubSpot sync alone is worth it.",
+        "author": "Sarah Chen",
+        "title": "Marketing Director",
+        "company": "TechFlow",
+        "metric": "80% faster setup"
+      },
+      "2": {
+        "quote": "Finally, a tool that just works. Embed the form, sync to CRM, done. No complex integrations.",
+        "author": "Marcus Johnson",
+        "title": "Head of Demand Gen",
+        "company": "ScaleUp",
+        "metric": "3x more webinars"
+      },
+      "3": {
+        "quote": "We switched from a heavyweight platform to HubStream. Half the cost, zero learning curve.",
+        "author": "Elena Rodriguez",
+        "title": "Events Manager",
+        "company": "GrowthLabs",
+        "metric": "50% cost savings"
+      }
+    },
+    "pricing": {
+      "title": "Pricing",
+      "subtitle": "Start free. Upgrade when you need more.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "saveBadge": "Save 17%",
+      "mostPopular": "Most Popular",
+      "billedYearly": "Billed annually at",
+      "allPlansTitle": "All plans include",
+      "allPlans": {
+        "1": "Email notifications",
+        "2": "GDPR compliance",
+        "3": "Analytics dashboard"
+      },
+      "free": {
+        "name": "Free",
+        "description": "For trying out",
+        "cta": "Get started",
+        "poweredBy": "Powered by",
+        "onEmbeds": "on embeds",
+        "features": {
+          "1": "1 published webinar at a time",
+          "2": "Up to 50 attendees per webinar",
+          "3": "1 team member",
+          "4": "placeholder"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For growing teams",
+        "cta": "Start free trial",
+        "features": {
+          "1": "Unlimited published webinars",
+          "2": "Up to 100 attendees per webinar",
+          "3": "Unlimited team members",
+          "4": "No branding on embeds",
+          "5": "Custom domain for event pages",
+          "6": "Custom registration fields"
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know about HubStream.",
+      "whatIs": {
+        "question": "What is HubStream?",
+        "answer": "HubStream is a lightweight webinar management tool that connects Google Meet and HubSpot. Create events, embed signup forms on your website, and have registrations automatically sync to your CRM with meeting links generated for you."
+      },
+      "googleMeet": {
+        "question": "How does the Google Meet integration work?",
+        "answer": "When you publish a webinar, HubStream automatically creates a Google Meet link and attaches it to the event. Attendees receive the link in their confirmation email. You need a Google account connected during setup."
+      },
+      "hubspotSync": {
+        "question": "How does HubSpot sync work?",
+        "answer": "When someone registers, HubStream creates or updates their contact in HubSpot and logs a meeting engagement. You can map custom fields and choose which HubSpot properties to sync."
+      },
+      "embed": {
+        "question": "Can I embed the form on any website?",
+        "answer": "Yes. HubStream provides a one-line iframe embed code that works on any website, blog, or landing page. Paste it where you want the form to appear."
+      },
+      "freeLimits": {
+        "question": "What happens when I hit the free plan limits?",
+        "answer": "You'll need to upgrade to Pro to publish more webinars, add more team members, or remove HubStream branding from embeds. Your existing data stays intact."
+      },
+      "upgrade": {
+        "question": "How do I upgrade to Pro?",
+        "answer": "From your dashboard settings, click Upgrade to Pro. You'll go through Stripe checkout. Your Pro features activate immediately."
+      },
+      "freeTrial": {
+        "question": "Is there a free trial?",
+        "answer": "The Free plan is free forever. When you upgrade to Pro, you can cancel anytime. We don't require a credit card to get started."
+      },
+      "customDomain": {
+        "question": "Do you support custom domains?",
+        "answer": "Yes, on the Pro plan. You can use your own domain for event pages (e.g. events.yourcompany.com) instead of the default HubStream URL."
+      }
+    },
+    "finalCta": {
+      "title": "Ready to streamline your webinars?",
+      "subtitle": "Free plan available. No credit card required.",
+      "cta": "Get started free"
+    },
+    "footer": {
+      "tagline": "Lightweight webinar management for Google Meet and HubSpot.",
+      "product": "Product",
+      "resources": "Resources",
+      "privacy": "Privacy policy"
+    }
   }
 }
