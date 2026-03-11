@@ -9,7 +9,15 @@ type Props = {
 
 export function EmbedCodeSnippet({ embedUrl }: Props) {
   const [copied, setCopied] = useState(false);
-  const iframeCode = `<iframe src="${embedUrl}" width="100%" height="400" frameborder="0" title="Event registration"></iframe>`;
+  const iframeCode = `<iframe id="hubstream-embed" src="${embedUrl}" width="100%" height="480" frameborder="0" title="Event registration"></iframe>
+<script>
+  window.addEventListener("message", function(e) {
+    if (e.data?.type === "hubstream-embed-resize" && e.data?.height) {
+      var iframe = document.getElementById("hubstream-embed");
+      if (iframe) iframe.style.height = e.data.height + "px";
+    }
+  });
+</script>`;
 
   async function copyToClipboard() {
     await navigator.clipboard.writeText(iframeCode);
@@ -20,7 +28,8 @@ export function EmbedCodeSnippet({ embedUrl }: Props) {
   return (
     <div className="space-y-2">
       <p className="text-sm text-muted-foreground">
-        Copy this code to embed the registration form on your website:
+        Copy this code to embed the registration form on your website. The
+        iframe will auto-resize to fit the form.
       </p>
       <pre className="rounded-md bg-muted p-4 text-xs overflow-x-auto">
         <code>{iframeCode}</code>

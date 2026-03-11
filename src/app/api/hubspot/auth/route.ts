@@ -5,6 +5,7 @@ const HUBSPOT_SCOPES = [
   "oauth",
   "crm.objects.contacts.read",
   "crm.objects.contacts.write",
+  "crm.schemas.contacts.read",
 ].join(" ");
 
 export async function GET(req: Request) {

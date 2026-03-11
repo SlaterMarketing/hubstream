@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { RegistrationForm } from "@/components/registration-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmbedResize } from "./embed-resize";
 
 type Props = {
   params: Promise<{ eventId: string }>;
@@ -32,24 +34,32 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
   const showPoweredBy = event.organization.plan !== "pro";
 
   return (
-    <div className="min-h-full bg-background p-4">
-      {isCancelled && (
-        <p className="text-sm text-destructive">This event has been cancelled.</p>
-      )}
-      {isPast && !isCancelled && (
-        <p className="text-sm text-muted-foreground">This event has ended.</p>
-      )}
-      {showRegistration && (
-        <RegistrationForm
-          eventId={event.id}
-          locale="en"
-          registrationFields={registrationFields}
-          utmSource={search.utm_source}
-          utmMedium={search.utm_medium}
-          utmCampaign={search.utm_campaign}
-          showPoweredBy={showPoweredBy}
-        />
-      )}
+    <div className="w-full max-w-md bg-background p-4" id="embed-root">
+      <EmbedResize />
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl">Register</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isCancelled && (
+            <p className="text-sm text-destructive">This event has been cancelled.</p>
+          )}
+          {isPast && !isCancelled && (
+            <p className="text-sm text-muted-foreground">This event has ended.</p>
+          )}
+          {showRegistration && (
+            <RegistrationForm
+              eventId={event.id}
+              locale="en"
+              registrationFields={registrationFields}
+              utmSource={search.utm_source}
+              utmMedium={search.utm_medium}
+              utmCampaign={search.utm_campaign}
+              showPoweredBy={showPoweredBy}
+            />
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

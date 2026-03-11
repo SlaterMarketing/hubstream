@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { saveHubSpotFieldMapping } from "@/app/actions/integrations";
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon, Trash2Icon, Loader2Icon } from "lucide-react";
 
 const STANDARD_FIELDS = [
   { key: "firstName", label: "First name", defaultHubSpot: "firstname" },
@@ -14,12 +14,17 @@ const STANDARD_FIELDS = [
   { key: "jobTitle", label: "Job title", defaultHubSpot: "jobtitle" },
 ] as const;
 
+type HubSpotProperty = { name: string; label: string };
+
 type Props = {
   initialMapping: Record<string, string> | null;
 };
 
 export function HubSpotFieldMapping({ initialMapping }: Props) {
   const router = useRouter();
+  const [properties, setProperties] = useState<HubSpotProperty[]>([]);
+  const [propertiesLoading, setPropertiesLoading] = useState(true);
+  const [propertiesError, setPropertiesError] = useState<string | null>(null);
   const [mapping, setMapping] = useState<Record<string, string>>(
     () => initialMapping ?? {}
   );
@@ -33,6 +38,17 @@ export function HubSpotFieldMapping({ initialMapping }: Props) {
     }
   );
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/hubspot/properties")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load properties");
+        return res.json();
+      })
+      .then((data) => setProperties(data.properties ?? []))
+      .catch(() => setPropertiesError("Could not load HubSpot properties"))
+      .finally(() => setPropertiesLoading(false));
+  }, []);
 
   function getStandardValue(fieldKey: string): string {
     return (
@@ -86,13 +102,20 @@ export function HubSpotFieldMapping({ initialMapping }: Props) {
     }
   }
 
+  const selectClassName =
+    "h-10 w-full max-w-[220px] rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Map your registration form fields to HubSpot contact properties. Use
-        HubSpot&apos;s internal property names (e.g. firstname, company,
-        industry).
+        Map your registration form fields to HubSpot contact properties.
       </p>
+
+      {propertiesError && (
+        <p className="text-sm text-amber-600 dark:text-amber-400">
+          {propertiesError}. You can still enter property names manually below.
+        </p>
+      )}
 
       <div className="space-y-3">
         <p className="text-sm font-medium">Standard fields</p>
@@ -106,14 +129,33 @@ export function HubSpotFieldMapping({ initialMapping }: Props) {
                 {field.label}
               </span>
               <span className="text-muted-foreground">→</span>
-              <Input
-                placeholder={field.defaultHubSpot}
-                value={getStandardValue(field.key)}
-                onChange={(e) =>
-                  setStandardValue(field.key, e.target.value)
-                }
-                className="max-w-[200px] font-mono text-sm"
-              />
+              {propertiesLoading ? (
+                <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
+              ) : properties.length > 0 ? (
+                <select
+                  value={getStandardValue(field.key)}
+                  onChange={(e) =>
+                    setStandardValue(field.key, e.target.value)
+                  }
+                  className={selectClassName}
+                >
+                  <option value="">Select HubSpot property...</option>
+                  {properties.map((p) => (
+                    <option key={p.name} value={p.name}>
+                      {p.label} ({p.name})
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <Input
+                  placeholder={field.defaultHubSpot}
+                  value={getStandardValue(field.key)}
+                  onChange={(e) =>
+                    setStandardValue(field.key, e.target.value)
+                  }
+                  className="max-w-[200px] font-mono text-sm"
+                />
+              )}
             </div>
           ))}
         </div>
@@ -148,14 +190,33 @@ export function HubSpotFieldMapping({ initialMapping }: Props) {
                   className="max-w-[180px] font-mono text-sm"
                 />
                 <span className="text-muted-foreground">→</span>
-                <Input
-                  placeholder="HubSpot property (e.g. industry)"
-                  value={row.value}
-                  onChange={(e) =>
-                    updateCustomRow(index, "value", e.target.value)
-                  }
-                  className="max-w-[180px] font-mono text-sm"
-                />
+                {propertiesLoading ? (
+                  <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
+                ) : properties.length > 0 ? (
+                  <select
+                    value={row.value}
+                    onChange={(e) =>
+                      updateCustomRow(index, "value", e.target.value)
+                    }
+                    className={selectClassName}
+                  >
+                    <option value="">Select HubSpot property...</option>
+                    {properties.map((p) => (
+                      <option key={p.name} value={p.name}>
+                        {p.label} ({p.name})
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <Input
+                    placeholder="HubSpot property (e.g. industry)"
+                    value={row.value}
+                    onChange={(e) =>
+                      updateCustomRow(index, "value", e.target.value)
+                    }
+                    className="max-w-[180px] font-mono text-sm"
+                  />
+                )}
                 <Button
                   type="button"
                   variant="ghost"
