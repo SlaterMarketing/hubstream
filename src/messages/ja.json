@@ -1,0 +1,31 @@
+{
+  "Common": {
+    "loading": "読み込み中...",
+    "error": "Something went wrong",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "back": "戻る"
+  },
+  "Auth": {
+    "signIn": "サインイン",
+    "signOut": "サインアウト",
+    "signInWithGoogle": "Googleでサインイン"
+  },
+  "Onboarding": {
+    "title": "組織を作成",
+    "orgName": "組織名",
+    "orgSlug": "URLスラッグ",
+    "createOrg": "組織を作成"
+  },
+  "Dashboard": {
+    "title": "ダッシュボード",
+    "events": "イベント",
+    "newEvent": "新しいイベント",
+    "settings": "設定",
+    "upcoming": "今後の予定",
+    "past": "過去",
+    "draft": "下書き"
+  }
+}

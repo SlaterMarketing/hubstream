@@ -1,0 +1,31 @@
+{
+  "Common": {
+    "loading": "加载中...",
+    "error": "Something went wrong",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "back": "返回"
+  },
+  "Auth": {
+    "signIn": "登录",
+    "signOut": "退出",
+    "signInWithGoogle": "使用 Google 登录"
+  },
+  "Onboarding": {
+    "title": "创建组织",
+    "orgName": "组织名称",
+    "orgSlug": "URL 标识",
+    "createOrg": "创建组织"
+  },
+  "Dashboard": {
+    "title": "仪表板",
+    "events": "活动",
+    "newEvent": "新活动",
+    "settings": "设置",
+    "upcoming": "即将举行",
+    "past": "已结束",
+    "draft": "草稿"
+  }
+}

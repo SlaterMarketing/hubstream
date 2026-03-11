@@ -1,0 +1,31 @@
+{
+  "Common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Atrás"
+  },
+  "Auth": {
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "signInWithGoogle": "Iniciar sesión con Google"
+  },
+  "Onboarding": {
+    "title": "Crear tu organización",
+    "orgName": "Nombre de la organización",
+    "orgSlug": "Slug de URL",
+    "createOrg": "Crear organización"
+  },
+  "Dashboard": {
+    "title": "Panel",
+    "events": "Eventos",
+    "newEvent": "Nuevo evento",
+    "settings": "Configuración",
+    "upcoming": "Próximos",
+    "past": "Pasados",
+    "draft": "Borrador"
+  }
+}

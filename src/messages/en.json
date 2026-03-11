@@ -1,0 +1,31 @@
+{
+  "Common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back"
+  },
+  "Auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signInWithGoogle": "Sign in with Google"
+  },
+  "Onboarding": {
+    "title": "Create your organization",
+    "orgName": "Organization name",
+    "orgSlug": "URL slug",
+    "createOrg": "Create organization"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "events": "Events",
+    "newEvent": "New event",
+    "settings": "Settings",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "draft": "Draft"
+  }
+}
