@@ -108,9 +108,9 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
-        <EventScrollCircle />
         {/* Hero section - 100vh x 100vw */}
-        <section className="relative z-10 flex h-screen w-full min-w-full flex-col items-center justify-center px-4">
+        <section className="relative flex h-screen w-full min-w-full flex-col items-center justify-center px-4">
+          <EventScrollCircle />
           {event.coverImageUrl && (
             <>
               <div
@@ -120,12 +120,13 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
               <div className="absolute inset-0 bg-black/50" />
             </>
           )}
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
           <EventPageHeader
             showRegistration={showRegistration}
             hasCoverImage={!!event.coverImageUrl}
           />
           <div
-            className={`relative z-0 flex flex-col items-center justify-center text-center ${
+            className={`flex flex-col items-center justify-center text-center ${
               event.coverImageUrl ? "text-white [&_.text-muted-foreground]:text-white/80" : ""
             }`}
           >
@@ -140,6 +141,7 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
             <p className="mt-6 text-lg text-muted-foreground">
               {formattedDateTime} • {durationText}
             </p>
+          </div>
           </div>
         </section>
 

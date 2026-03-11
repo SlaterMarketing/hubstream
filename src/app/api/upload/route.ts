@@ -55,9 +55,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ publicUrl, key });
   } catch (err) {
     console.error("Upload error:", err);
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Upload failed" },
-      { status: 500 }
-    );
+
+    let message = "Upload failed";
+    if (err instanceof Error) {
+      message = err.message;
+      // R2/S3 Access Denied - usually API token permissions
+      if (
+        message.includes("Access Denied") ||
+        (err as { name?: string }).name === "AccessDenied"
+      ) {
+        message =
+          "Storage access denied. Check R2 API token has Object Read & Write permission in Cloudflare dashboard.";
+      }
+    }
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
