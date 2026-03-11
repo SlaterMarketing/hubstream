@@ -47,96 +47,16 @@ export function Integrations() {
           </p>
         </motion.div>
 
-        {/* Integration cards - clickable */}
-        <div className="mt-12 flex flex-col items-center gap-6 md:flex-row md:justify-center md:gap-4">
-          {INTEGRATIONS.map((integration, index) => {
-            const Icon = ICONS[integration.icon];
-            const isActive = activeIntegration === integration.id;
-            return (
-              <div key={integration.id} className="flex items-center">
-                <button
-                  type="button"
-                  onClick={() => setActiveIntegration(integration.id)}
-                  className={cn(
-                    "flex w-full flex-col items-center rounded-xl border p-6 shadow-sm transition-all md:w-48",
-                    isActive
-                      ? "border-brand bg-brand/5 ring-2 ring-brand/20"
-                      : "border-border bg-card hover:border-brand/50 hover:shadow-md"
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "rounded-lg p-3",
-                      isActive ? "bg-brand/20" : "bg-muted"
-                    )}
-                  >
-                    <Icon
-                      className={cn(
-                        "size-8",
-                        isActive ? "text-brand" : "text-muted-foreground"
-                      )}
-                    />
-                  </div>
-                  <h3 className="mt-4 font-semibold">{t(integration.nameKey)}</h3>
-                  <p className="mt-2 text-center text-xs text-muted-foreground">
-                    {t(integration.descriptionKey)}
-                  </p>
-                </button>
-                {index < INTEGRATIONS.length - 1 && (
-                  <ArrowRightIcon
-                    className="mx-2 hidden size-5 shrink-0 text-muted-foreground md:block"
-                    aria-hidden
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Animated flow indicator */}
-        <motion.div
-          className="mt-8 flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          {FLOW_STEPS.map((step, i) => {
-            const stepId: IntegrationId | null =
-              step === "Registration"
-                ? "embed"
-                : step === "HubSpot Contact"
-                  ? "hubspot"
-                  : step === "Google Meet Link"
-                    ? "google-meet"
-                    : null;
-            const isHighlighted = stepId !== null && activeIntegration === stepId;
-            return (
-              <span key={step} className="flex items-center gap-2">
-                <span
-                  className={cn(
-                    "rounded-full px-2.5 py-0.5 transition-colors",
-                    isHighlighted ? "bg-brand/20 font-medium text-brand" : ""
-                  )}
-                >
-                  {step}
-                </span>
-                {i < FLOW_STEPS.length - 1 && (
-                  <ArrowRightIcon className="size-4 shrink-0 opacity-50" />
-                )}
-              </span>
-            );
-          })}
-        </motion.div>
-
-        {/* Live preview panel */}
-        <motion.div
-          className="mt-10"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="overflow-hidden rounded-xl border border-border/80 bg-card shadow-xl shadow-black/10 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
+        <div className="mt-12 grid gap-8 lg:grid-cols-[30%_1fr]">
+          {/* Live preview panel - left, 30% */}
+          <motion.div
+            className="order-2 lg:order-1"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="overflow-hidden rounded-xl border border-border/80 bg-card shadow-xl shadow-black/10 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
             <div className="flex items-center gap-2 border-b bg-muted/40 px-4 py-2.5">
               <div className="flex gap-1.5">
                 <div className="size-2.5 rounded-full bg-red-400/90" />
@@ -164,7 +84,92 @@ export function Integrations() {
               </AnimatePresence>
             </div>
           </div>
-        </motion.div>
+          </motion.div>
+
+          {/* Integration cards + flow - right, 70% */}
+          <div className="order-1 flex flex-col justify-center gap-8 lg:order-2">
+            {/* Integration cards - clickable */}
+            <div className="flex flex-col items-center gap-6 md:flex-row md:justify-center md:gap-4">
+              {INTEGRATIONS.map((integration, index) => {
+                const Icon = ICONS[integration.icon];
+                const isActive = activeIntegration === integration.id;
+                return (
+                  <div key={integration.id} className="flex items-center">
+                    <button
+                      type="button"
+                      onClick={() => setActiveIntegration(integration.id)}
+                      className={cn(
+                        "flex w-full flex-col items-center rounded-xl border p-6 shadow-sm transition-all md:w-48",
+                        isActive
+                          ? "border-brand bg-brand/5 ring-2 ring-brand/20"
+                          : "border-border bg-card hover:border-brand/50 hover:shadow-md"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "rounded-lg p-3",
+                          isActive ? "bg-brand/20" : "bg-muted"
+                        )}
+                      >
+                        <Icon
+                          className={cn(
+                            "size-8",
+                            isActive ? "text-brand" : "text-muted-foreground"
+                          )}
+                        />
+                      </div>
+                      <h3 className="mt-4 font-semibold">{t(integration.nameKey)}</h3>
+                      <p className="mt-2 text-center text-xs text-muted-foreground">
+                        {t(integration.descriptionKey)}
+                      </p>
+                    </button>
+                    {index < INTEGRATIONS.length - 1 && (
+                      <ArrowRightIcon
+                        className="mx-2 hidden size-5 shrink-0 text-muted-foreground md:block"
+                        aria-hidden
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Animated flow indicator */}
+            <motion.div
+              className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {FLOW_STEPS.map((step, i) => {
+                const stepId: IntegrationId | null =
+                  step === "Registration"
+                    ? "embed"
+                    : step === "HubSpot Contact"
+                      ? "hubspot"
+                      : step === "Google Meet Link"
+                        ? "google-meet"
+                        : null;
+                const isHighlighted = stepId !== null && activeIntegration === stepId;
+                return (
+                  <span key={step} className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "rounded-full px-2.5 py-0.5 transition-colors",
+                        isHighlighted ? "bg-brand/20 font-medium text-brand" : ""
+                      )}
+                    >
+                      {step}
+                    </span>
+                    {i < FLOW_STEPS.length - 1 && (
+                      <ArrowRightIcon className="size-4 shrink-0 opacity-50" />
+                    )}
+                  </span>
+                );
+              })}
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -143,7 +143,7 @@ export function Features() {
                 <div className="size-2.5 rounded-full bg-emerald-400/90" />
               </div>
               <div className="flex-1 rounded-lg border border-border/60 bg-background/90 px-4 py-2 text-center text-xs text-muted-foreground shadow-inner">
-                app.hubstream.io
+                hubstream.app
                 {activeFeature === "google-meet" && "/events/abc123"}
                 {activeFeature === "hubspot-sync" && "/events/abc123"}
                 {activeFeature === "embed" && "/events/abc123"}
