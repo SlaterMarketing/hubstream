@@ -5,6 +5,7 @@ type Props = {
   className?: string;
   showImage?: boolean;
   size?: "sm" | "md" | "lg";
+  inverted?: boolean;
 };
 
 const sizeClasses = {
@@ -13,21 +14,21 @@ const sizeClasses = {
   lg: "text-2xl",
 };
 
-export function BrandLogo({ className, showImage = true, size = "md" }: Props) {
+export function BrandLogo({ className, showImage = true, size = "md", inverted = false }: Props) {
   return (
-    <span className={cn("inline-flex items-center gap-2 font-semibold", sizeClasses[size], className)}>
+    <span className={cn("inline-flex items-center gap-2 font-semibold", sizeClasses[size], inverted && "text-white", className)}>
       {showImage && (
         <Image
           src="/logo.png"
           alt=""
           width={size === "sm" ? 24 : size === "md" ? 32 : 40}
           height={size === "sm" ? 24 : size === "md" ? 32 : 40}
-          className="shrink-0"
+          className={cn("shrink-0", inverted && "brightness-0 invert")}
         />
       )}
       <span>
-        <span style={{ color: "#ff724c" }}>Hub</span>
-        <span className="text-foreground">Stream</span>
+        <span style={inverted ? { color: "inherit" } : { color: "#ff724c" }}>Hub</span>
+        <span className={inverted ? "text-inherit" : "text-foreground"}>Stream</span>
       </span>
     </span>
   );

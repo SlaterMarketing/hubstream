@@ -23,6 +23,9 @@
     "orgSlug": "URL 标识",
     "createOrg": "创建组织"
   },
+  "EventPage": {
+    "registerForEvent": "报名参加活动"
+  },
   "Dashboard": {
     "title": "仪表板",
     "events": "活动",

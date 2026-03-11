@@ -23,6 +23,9 @@
     "orgSlug": "URL-Slug",
     "createOrg": "Organisation erstellen"
   },
+  "EventPage": {
+    "registerForEvent": "Für Event anmelden"
+  },
   "Dashboard": {
     "title": "Dashboard",
     "events": "Veranstaltungen",

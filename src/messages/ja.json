@@ -23,6 +23,9 @@
     "orgSlug": "URLスラッグ",
     "createOrg": "組織を作成"
   },
+  "EventPage": {
+    "registerForEvent": "イベントに申し込む"
+  },
   "Dashboard": {
     "title": "ダッシュボード",
     "events": "イベント",

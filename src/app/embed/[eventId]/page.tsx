@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { RegistrationForm } from "@/components/registration-form";
+import { EventPageHeader } from "@/components/event-page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
@@ -41,6 +42,10 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* Hero section - 100vh x 100vw */}
       <section className="relative flex h-screen w-full flex-col items-center justify-center px-4">
+        <EventPageHeader
+          showRegistration={showRegistration}
+          hasCoverImage={!!event.coverImageUrl}
+        />
         {event.coverImageUrl && (
           <>
             <div
@@ -69,7 +74,7 @@ export default async function EmbedEventPage({ params, searchParams }: Props) {
         </div>
       </section>
 
-      <div className="mx-auto max-w-md p-4">
+      <div className="mx-auto max-w-md p-4" id="register">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">{event.title}</CardTitle>

@@ -37,6 +37,9 @@
     "createEvent": "Create new event",
     "noEvents": "No events yet"
   },
+  "EventPage": {
+    "registerForEvent": "Register for event"
+  },
   "EventEditor": {
     "registrationForm": "Registration form",
     "registrationFormDescription": "Add or remove fields. Email is always required.",

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { TiptapRenderer } from "@/components/tiptap-renderer";
 import { RegistrationForm } from "@/components/registration-form";
 import { PageViewTracker } from "@/components/page-view-tracker";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import { EventPageHeader } from "@/components/event-page-header";
 
 type Props = {
   params: Promise<{ locale: string; orgSlug: string; eventSlug: string }>;
@@ -40,7 +40,7 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
 
   const org = await db.organization.findUnique({
     where: { slug: orgSlug },
-    select: { id: true, name: true, logoUrl: true },
+    select: { id: true, name: true, logoUrl: true, plan: true },
   });
   if (!org) notFound();
 
@@ -118,9 +118,10 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
               <div className="absolute inset-0 bg-black/50" />
             </>
           )}
-          <div className="absolute right-4 top-4 z-10">
-            <LanguageSwitcher />
-          </div>
+          <EventPageHeader
+            showRegistration={showRegistration}
+            hasCoverImage={!!event.coverImageUrl}
+          />
           <div
             className={`relative z-0 flex flex-col items-center justify-center text-center ${
               event.coverImageUrl ? "text-white [&_.text-muted-foreground]:text-white/80" : ""
@@ -259,7 +260,7 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
               )}
             </div>
 
-            <aside className="lg:sticky lg:top-24 lg:self-start">
+            <aside className="lg:sticky lg:top-24 lg:self-start" id="register">
               {showRegistration && (
                 <div className="rounded-xl border bg-card p-6">
                   <h2 className="mb-4 text-lg font-semibold">Register</h2>
@@ -270,17 +271,8 @@ export default async function PublicEventPage({ params, searchParams }: Props) {
                     utmSource={search.utm_source}
                     utmMedium={search.utm_medium}
                     utmCampaign={search.utm_campaign}
+                    showPoweredBy={org.plan !== "pro"}
                   />
-                  {event.meetLink && (
-                    <a
-                      href={event.meetLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 block text-center text-sm text-primary hover:underline"
-                    >
-                      Join Google Meet
-                    </a>
-                  )}
                 </div>
               )}
             </aside>
