@@ -16,7 +16,10 @@ const LOGOS = [
 
 function LogoItem({ name }: { name: string }) {
   return (
-    <div className="shrink-0 text-lg font-semibold text-muted-foreground/60">
+    <div
+      className="shrink-0 text-lg font-semibold text-muted-foreground/60"
+      style={{ fontVariantLigatures: "none" }}
+    >
       {name}
     </div>
   );

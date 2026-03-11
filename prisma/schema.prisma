@@ -53,6 +53,7 @@ model User {
 
   organization Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
   accounts     Account[]
+  sessions     Session[]
 
   @@unique([email])
 }
@@ -81,6 +82,8 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

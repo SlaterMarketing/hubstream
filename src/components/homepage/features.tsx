@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import {
@@ -33,6 +33,36 @@ type FeatureId = (typeof FEATURES)[number]["id"];
 export function Features() {
   const t = useTranslations();
   const [activeFeature, setActiveFeature] = useState<FeatureId>("google-meet");
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const setActiveFromIndex = useCallback((index: number) => {
+    if (index >= 0 && index < FEATURES.length) {
+      setActiveFeature(FEATURES[index].id);
+    }
+  }, []);
+
+  useEffect(() => {
+    const cards = cardRefs.current.filter((el): el is HTMLButtonElement => el != null);
+    if (cards.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const index = cards.indexOf(entry.target as HTMLButtonElement);
+          if (index >= 0) setActiveFromIndex(index);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-15% 0px -60% 0px",
+        threshold: 0,
+      }
+    );
+
+    cards.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [setActiveFromIndex]);
 
   return (
     <section id="features" className="scroll-mt-20 px-4 py-24">
@@ -52,56 +82,60 @@ export function Features() {
           </p>
         </motion.div>
 
-        {/* Feature cards - clickable */}
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((feature) => {
-            const Icon = ICONS[feature.icon];
-            const isActive = activeFeature === feature.id;
-            return (
-              <button
-                key={feature.id}
-                type="button"
-                onClick={() => setActiveFeature(feature.id)}
-                className={cn(
-                  "rounded-lg border p-5 text-left transition-all",
-                  isActive
-                    ? "border-brand bg-brand/5 shadow-md ring-2 ring-brand/20"
-                    : "border-border bg-card hover:border-brand/50 hover:shadow-sm"
-                )}
-              >
-                <div className="flex items-start justify-between">
-                  <div
-                    className={cn(
-                      "rounded-lg p-2.5",
-                      isActive ? "bg-brand/20 text-brand" : "bg-brand/10 text-brand"
-                    )}
-                  >
-                    <Icon className="size-5" />
-                  </div>
-                  {feature.pro && (
-                    <Badge variant="brand" className="text-xs">
-                      {t("Homepage.features.proBadge")}
-                    </Badge>
+        <div className="mt-12 grid gap-8 lg:grid-cols-[30%_1fr]">
+          {/* Feature cards - left column */}
+          <div className="flex flex-col gap-4">
+            {FEATURES.map((feature, index) => {
+              const Icon = ICONS[feature.icon];
+              const isActive = activeFeature === feature.id;
+              return (
+                <button
+                  key={feature.id}
+                  ref={(el) => {
+                    cardRefs.current[index] = el;
+                  }}
+                  type="button"
+                  onClick={() => setActiveFeature(feature.id)}
+                  className={cn(
+                    "rounded-lg border p-5 text-left transition-all",
+                    isActive
+                      ? "border-brand bg-brand/5 shadow-md ring-2 ring-brand/20"
+                      : "border-border bg-card hover:border-brand/50 hover:shadow-sm"
                   )}
-                </div>
-                <h3 className="mt-3 font-semibold">{t(feature.titleKey)}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
-                  {t(feature.descriptionKey)}
-                </p>
-              </button>
-            );
-          })}
-        </div>
+                >
+                  <div className="flex items-start justify-between">
+                    <div
+                      className={cn(
+                        "rounded-lg p-2.5",
+                        isActive ? "bg-brand/20 text-brand" : "bg-brand/10 text-brand"
+                      )}
+                    >
+                      <Icon className="size-5" />
+                    </div>
+                    {feature.pro && (
+                      <Badge variant="brand" className="text-xs">
+                        {t("Homepage.features.proBadge")}
+                      </Badge>
+                    )}
+                  </div>
+                  <h3 className="mt-3 font-semibold">{t(feature.titleKey)}</h3>
+                  <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
+                    {t(feature.descriptionKey)}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Live preview panel */}
-        <motion.div
-          className="mt-10"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="overflow-hidden rounded-xl border border-border/80 bg-card shadow-xl shadow-black/10 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
+          {/* Live preview panel - right column, sticky */}
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="overflow-hidden rounded-xl border border-border/80 bg-card shadow-xl shadow-black/10 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
             <div className="flex items-center gap-2 border-b bg-muted/40 px-4 py-2.5">
               <div className="flex gap-1.5">
                 <div className="size-2.5 rounded-full bg-red-400/90" />
@@ -141,7 +175,9 @@ export function Features() {
               </AnimatePresence>
             </div>
           </div>
-        </motion.div>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

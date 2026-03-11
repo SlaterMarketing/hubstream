@@ -6,7 +6,6 @@ import { SocialProof } from "@/components/homepage/social-proof";
 import { HowItWorks } from "@/components/homepage/how-it-works";
 import { Features } from "@/components/homepage/features";
 import { Integrations } from "@/components/homepage/integrations";
-import { InteractiveDemo } from "@/components/homepage/interactive-demo";
 import { CaseStudy } from "@/components/homepage/case-study";
 import { Testimonials } from "@/components/homepage/testimonials";
 import { Pricing } from "@/components/homepage/pricing";
@@ -32,7 +31,6 @@ export default async function HomePage({ params }: Props) {
         <HowItWorks />
         <Features />
         <Integrations />
-        <InteractiveDemo />
         <CaseStudy />
         <Testimonials />
         <Pricing session={session} />

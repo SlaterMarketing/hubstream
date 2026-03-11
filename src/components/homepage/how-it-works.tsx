@@ -43,7 +43,7 @@ export function HowItWorks() {
         </motion.div>
 
         {/* Step selector */}
-        <div className="mt-12 flex flex-wrap justify-center gap-4">
+        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           {HOW_IT_WORKS_STEPS.map((step) => {
             const Icon = ICONS[step.icon];
             const isActive = activeStep === step.id;
@@ -95,7 +95,7 @@ export function HowItWorks() {
                 <div className="size-2.5 rounded-full bg-emerald-400/90" />
               </div>
               <div className="flex-1 rounded-lg border border-border/60 bg-background/90 px-4 py-2 text-center text-xs text-muted-foreground shadow-inner">
-                app.hubstream.io/dashboard
+                hubstream.app/dashboard
                 {activeStep === "create" && "/events/new"}
                 {activeStep === "embed" && "/events/abc123"}
                 {activeStep === "engage" && "/events/abc123"}
