@@ -7,18 +7,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 type Props = {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ reconnect?: string }>;
 };
 
-export default async function LoginPage({ params }: Props) {
+export default async function LoginPage({ params, searchParams }: Props) {
   const { locale } = await params;
+  const search = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations("Auth");
   const session = await auth();
+  const isReconnecting = search.reconnect === "calendar";
 
   if (session?.user) {
     const user = session.user as { orgId?: string | null };
     if (user.orgId) {
-      redirect("/dashboard");
+      redirect(isReconnecting ? "/dashboard/settings" : "/dashboard");
     }
     redirect("/onboarding");
   }
@@ -29,14 +32,18 @@ export default async function LoginPage({ params }: Props) {
         <CardHeader>
           <CardTitle>{t("signIn")}</CardTitle>
           <CardDescription>
-            Sign in with your Google account to get started
+            {isReconnecting
+              ? "Sign in with Google again to reconnect Calendar access for publishing events."
+              : "Sign in with your Google account to get started"}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form
             action={async () => {
               "use server";
-              await signIn("google", { redirectTo: "/onboarding" });
+              await signIn("google", {
+                redirectTo: isReconnecting ? "/dashboard/settings" : "/onboarding",
+              });
             }}
           >
             <Button type="submit" className="w-full" variant="outline">

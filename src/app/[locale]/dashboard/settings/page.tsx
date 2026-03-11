@@ -1,9 +1,9 @@
 import { setRequestLocale } from "next-intl/server";
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { HubSpotConnect } from "./hubspot-connect";
+import { GoogleCalendarConnect } from "./google-calendar-connect";
 import { OrgSettingsForm } from "./org-settings-form";
 import { BillingSection } from "./billing-section";
 
@@ -32,7 +32,21 @@ export default async function SettingsPage({ params, searchParams }: Props) {
   });
   const hubspotConnected = !!integrationSettings?.hubspotAccessToken;
 
+  const userId = (session?.user as { id?: string })?.id;
+  const googleAccount = userId
+    ? await db.account.findFirst({
+        where: { userId, provider: "google" },
+      })
+    : null;
+  const googleCalendarConnected =
+    !!googleAccount?.access_token && !!googleAccount?.refresh_token;
+
   if (!org) return null;
+
+  async function reconnectGoogleCalendar() {
+    "use server";
+    await signOut({ redirectTo: `/${locale}/login?reconnect=calendar` });
+  }
 
   const billingSuccess = search.billing === "success";
   const billingCanceled = search.billing === "canceled";
@@ -102,6 +116,13 @@ export default async function SettingsPage({ params, searchParams }: Props) {
             </p>
           )}
           <HubSpotConnect connected={hubspotConnected} />
+          <div className="border-t pt-4">
+            <p className="mb-2 text-sm font-medium">Google Calendar</p>
+            <GoogleCalendarConnect
+              connected={googleCalendarConnected}
+              reconnectAction={reconnectGoogleCalendar}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>
