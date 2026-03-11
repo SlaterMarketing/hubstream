@@ -36,7 +36,8 @@ export default async function Image({ params }: Props) {
             color: "white",
           }}
         >
-          HubStream
+          <span style={{ color: "#ff724c" }}>Hub</span>
+          <span style={{ color: "white" }}>Stream</span>
         </div>
       ),
       { ...size }
@@ -71,7 +72,7 @@ export default async function Image({ params }: Props) {
           </div>
         )}
         <div style={{ fontSize: 18, color: "#525252", marginTop: 24 }}>
-          {org.name} • HubStream
+          {org.name} • <span style={{ color: "#ff724c" }}>Hub</span><span style={{ color: "#525252" }}>Stream</span>
         </div>
       </div>
     ),

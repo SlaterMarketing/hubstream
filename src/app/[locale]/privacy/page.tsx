@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { BrandLogo } from "@/components/brand-logo";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
 type Props = {
@@ -14,8 +15,8 @@ export default async function PrivacyPage({ params }: Props) {
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <header className="border-b bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="text-xl font-bold">
-            HubStream
+          <Link href="/" className="flex items-center">
+            <BrandLogo />
           </Link>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher />

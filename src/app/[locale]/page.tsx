@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/brand-logo";
 import { auth } from "@/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -18,8 +19,8 @@ export default async function HomePage({ params }: Props) {
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       <header className="border-b bg-white/80 dark:bg-zinc-900/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <Link href="/" className="text-xl font-bold">
-            HubStream
+          <Link href="/" className="flex items-center">
+            <BrandLogo />
           </Link>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher />
@@ -77,7 +78,7 @@ export default async function HomePage({ params }: Props) {
                   <li>1 published webinar at a time</li>
                   <li>Up to 50 attendees per webinar</li>
                   <li>1 team member</li>
-                  <li>Powered by HubStream on embeds</li>
+                  <li>Powered by <BrandLogo showImage={false} size="sm" /> on embeds</li>
                 </ul>
                 {!session?.user && (
                   <Link href="/login">
@@ -141,7 +142,7 @@ export default async function HomePage({ params }: Props) {
         <div className="mx-auto max-w-6xl px-4 text-center text-sm text-muted-foreground">
           <Link href="/privacy" className="hover:underline">Privacy policy</Link>
           {" · "}
-          <span>© {new Date().getFullYear()} HubStream</span>
+          <span>© {new Date().getFullYear()} <BrandLogo showImage={false} size="sm" /></span>
         </div>
       </footer>
     </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/brand-logo";
 import { Input } from "@/components/ui/input";
 import { registerForEvent } from "@/app/actions/registrations";
 
@@ -133,9 +134,9 @@ export function RegistrationForm({
             href="https://hubstream.app"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:underline"
+            className="hover:underline inline-flex items-center"
           >
-            HubStream
+            <BrandLogo showImage={false} size="sm" />
           </a>
         </p>
       )}

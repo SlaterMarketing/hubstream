@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { Link } from "@/i18n/navigation";
+import { BrandLogo } from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
@@ -34,8 +35,8 @@ export default async function DashboardLayout({ children, params }: Props) {
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
         <div className="flex h-16 items-center justify-between px-6">
-          <Link href="/dashboard" className="text-xl font-semibold">
-            HubStream
+          <Link href="/dashboard" className="flex items-center">
+            <BrandLogo />
           </Link>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher />
