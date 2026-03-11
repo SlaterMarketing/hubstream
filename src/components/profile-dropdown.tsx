@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -56,9 +57,10 @@ export function ProfileDropdown() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>Preferences</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Preferences</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <SunIcon className="mr-2 size-4" />
             Theme
@@ -94,6 +96,7 @@ export function ProfileDropdown() {
             ))}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Link href="/dashboard/events/new" className="flex cursor-default items-center gap-1.5">
